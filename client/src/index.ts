@@ -1,5 +1,9 @@
 export type RawEventType = 'click' | 'hover' | 'scroll' | 'navigation';
 
+export type DeviceType = 'desktop' | 'mobile' | 'tablet' | 'unknown';
+export type BrowserFamily = 'chrome' | 'safari' | 'firefox' | 'edge' | 'other' | 'unknown';
+
+
 export interface IntentVector {
   rage_score: number;
   hesitation_score: number;
@@ -14,10 +18,20 @@ export interface PrivacyEdgeConfig {
   privacyLevel?: 'standard' | 'high' | 'maximum';
   /** If true, do not use any persistent browser storage. Default: true */
   strictNoPersistence?: boolean;
+  genai?: {
+    /** Enable on-device ONNX intent embedding (privacy-safe). Default: false */
+    enableOnnxIntent?: boolean;
+    /** ONNX model URL. Default: `${apiBaseUrl}/api/v1/model/foundation.onnx` */
+    onnxModelUrl?: string;
+  };
 }
 
+type ResolvedConfig = Omit<Required<PrivacyEdgeConfig>, 'genai'> & {
+  genai: NonNullable<PrivacyEdgeConfig['genai']>;
+};
+
 export class PrivacyEdgeAnalytics {
-  private readonly config: Required<PrivacyEdgeConfig>;
+  private readonly config: ResolvedConfig;
   private readonly ghost: GhostWitness;
   private readonly federated: FederatedClient;
 
@@ -26,14 +40,19 @@ export class PrivacyEdgeAnalytics {
     this.config = {
       privacyLevel: cfg.privacyLevel ?? 'high',
       strictNoPersistence: cfg.strictNoPersistence ?? true,
-      ...cfg
+      ...cfg,
+      genai: cfg.genai ?? {
+        enableOnnxIntent: false,
+        onnxModelUrl: undefined
+      }
     };
 
     const epsilon = epsilonMap[this.config.privacyLevel];
     this.federated = new FederatedClient({
       apiBaseUrl: this.config.apiBaseUrl,
       apiKey: this.config.apiKey,
-      epsilon
+      epsilon,
+      genai: this.config.genai
     });
 
     this.ghost = new GhostWitness({
@@ -119,16 +138,20 @@ class GhostWitness {
       hist.__pePatched = true;
       hist.__pePush = hist.pushState;
       hist.__peReplace = hist.replaceState;
-      hist.pushState = function (...args) {
-        const r = hist.__pePush!.apply(this, args as any);
+      hist.pushState = function (
+        this: History,
+        ...args: Parameters<History['pushState']>
+      ): void {
+        hist.__pePush!.apply(this, args);
         window.dispatchEvent(new Event('privacyedge:navigation'));
-        return r;
-      } as any;
-      hist.replaceState = function (...args) {
-        const r = hist.__peReplace!.apply(this, args as any);
+      };
+      hist.replaceState = function (
+        this: History,
+        ...args: Parameters<History['replaceState']>
+      ): void {
+        hist.__peReplace!.apply(this, args);
         window.dispatchEvent(new Event('privacyedge:navigation'));
-        return r;
-      } as any;
+      };
     }
     window.addEventListener('privacyedge:navigation', () => this.recordNavigation(), { passive: true });
 
@@ -318,6 +341,7 @@ class GhostWitness {
 
     const revisited = visits >= 1;
     const immediateBacktrack = s.length >= 3 && last === s[s.length - 3];
+    const prev = s[s.length - 2];
     const oscillation = prev === s[s.length - 3] && last === s[s.length - 4];
 
     if (oscillation) return 0.8;
@@ -352,6 +376,7 @@ type FederatedClientOpts = {
   apiBaseUrl: string;
   apiKey: string;
   epsilon: number;
+  genai?: PrivacyEdgeConfig['genai'];
 };
 
 type Tensor = { shape: number[]; data: number[] };
@@ -368,17 +393,26 @@ class NoopTrainer implements LocalTrainer {
   }
 }
 
+type IntentEmbeddingSummary = { dim: number; vector: number[]; count: number; backend: 'onnx' | 'none' };
+
 class FederatedClient {
   private localModel: ModelWeights | null = null;
 
   // Client-side training interface (stub). In production, implement with TF.js.
   private trainer: LocalTrainer = new NoopTrainer();
   private batch: IntentVector[] = [];
+  private intentEmbeddings: number[][] = [];
+  private onnxSession: any | null = null;
+  private onnxOutputName: string | null = null;
+
   private readonly batchSize = 50;
   private readonly updateIntervalMs = 5 * 60 * 1000;
 
   constructor(private opts: FederatedClientOpts) {
-    window.setInterval(() => void this.sendUpdate(), this.updateIntervalMs);
+    // Support SSR / unit tests: only schedule updates in a browser environment.
+    if (typeof window !== 'undefined' && typeof window.setInterval === 'function') {
+      window.setInterval(() => void this.sendUpdate(), this.updateIntervalMs);
+    }
   }
 
   async downloadGlobalModel(): Promise<void> {
@@ -391,6 +425,12 @@ class FederatedClient {
 
   addTrainingSample(intent: IntentVector): void {
     this.batch.push(intent);
+
+    // Best-effort: compute on-device intent embedding without blocking.
+    if (this.opts.genai?.enableOnnxIntent) {
+      void this.computeIntentEmbedding(intent).catch(() => void 0);
+    }
+
     if (this.batch.length >= this.batchSize) void this.sendUpdate();
   }
 
@@ -411,7 +451,9 @@ class FederatedClient {
       client_id: await this.getEphemeralClientId(),
       weight_delta: weightDelta,
       num_samples: this.batch.length,
-      timestamp: Date.now()
+      timestamp: Date.now(),
+      cohorts: this.getCohorts(),
+      intent_embedding: await this.buildIntentEmbeddingSummary()
     };
 
     const res = await fetch(`${this.opts.apiBaseUrl}/api/v1/aggregate`, {
@@ -424,8 +466,90 @@ class FederatedClient {
     });
     if (res.ok) {
       this.batch = [];
+      this.intentEmbeddings = [];
       await this.downloadGlobalModel();
     }
+  }
+
+  private getCohorts(): { device_type: DeviceType; browser_family: BrowserFamily } {
+    // Privacy-safe coarse cohorts only.
+    const ua = typeof navigator !== 'undefined' ? navigator.userAgent || '' : '';
+
+    // Device type: use coarse screen hints when available.
+    let device_type: DeviceType = 'unknown';
+    try {
+      const w = typeof window !== 'undefined' ? window.innerWidth : 0;
+      if (w && w <= 768) device_type = 'mobile';
+      else if (w && w <= 1024) device_type = 'tablet';
+      else if (w) device_type = 'desktop';
+    } catch {
+      // ignore
+    }
+
+    // Browser family: coarse detection; do not send full UA.
+    let browser_family: BrowserFamily = 'other';
+    const u = ua.toLowerCase();
+    if (!u) browser_family = 'unknown';
+    else if (u.includes('edg/')) browser_family = 'edge';
+    else if (u.includes('firefox/')) browser_family = 'firefox';
+    else if (u.includes('safari') && !u.includes('chrome') && !u.includes('chromium')) browser_family = 'safari';
+    else if (u.includes('chrome') || u.includes('chromium')) browser_family = 'chrome';
+
+    return { device_type, browser_family };
+  }
+
+  private async ensureOnnxLoaded(): Promise<void> {
+    if (this.onnxSession) return;
+    if (typeof window === 'undefined') return;
+
+    const url =
+      this.opts.genai?.onnxModelUrl || `${this.opts.apiBaseUrl}/api/v1/model/intent-embedder.onnx`;
+
+    const { loadOnnxSession } = await import('./model/onnx_intent');
+    const { ort, session } = await loadOnnxSession(url);
+    // Store both session and ort module (needed for Tensor)
+    this.onnxSession = { ort, session };
+  }
+
+  private async computeIntentEmbedding(intent: IntentVector): Promise<void> {
+    // Turn intent vector into a simple feature vector.
+    // This is privacy-safe and contains no raw event text/URLs.
+    const features = [
+      intent.rage_score,
+      intent.hesitation_score,
+      intent.confusion_score,
+      intent.satisfaction_score
+    ];
+
+    await this.ensureOnnxLoaded();
+    if (!this.onnxSession) return;
+
+    const { runOnnxIntent } = await import('./model/onnx_intent');
+    const out = await runOnnxIntent(this.onnxSession.session, this.onnxSession.ort, features);
+    this.onnxOutputName = out.outputName;
+
+    // Keep a bounded memory buffer (privacy + perf)
+    this.intentEmbeddings.push(out.vector);
+    if (this.intentEmbeddings.length > 256) this.intentEmbeddings.shift();
+  }
+
+  private async buildIntentEmbeddingSummary(): Promise<IntentEmbeddingSummary> {
+    if (!this.opts.genai?.enableOnnxIntent) {
+      return { dim: 0, vector: [], count: 0, backend: 'none' };
+    }
+    // Wait a tiny moment for any in-flight computation to complete.
+    // (We keep it best-effort; no blocking guarantee.)
+    const embs = this.intentEmbeddings;
+    if (!embs.length) return { dim: 0, vector: [], count: 0, backend: 'onnx' };
+
+    const dim = embs[0]?.length || 0;
+    const acc = new Array(dim).fill(0);
+    for (const v of embs) {
+      for (let i = 0; i < dim; i++) acc[i] += v[i] || 0;
+    }
+    const count = embs.length;
+    const mean = acc.map((x) => x / Math.max(1, count));
+    return { dim, vector: mean, count, backend: 'onnx' };
   }
 
   private async getEphemeralClientId(): Promise<string> {
