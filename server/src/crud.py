@@ -226,6 +226,7 @@ async def increment_friction_event(
     page_url_hash: str | None = None,
     top_element_hash: str | None = None,
     device_type: str | None = None,
+    browser_family: str | None = None,
 ) -> None:
     bucket = hour_bucket(ts_ms)
 
@@ -253,11 +254,14 @@ async def increment_friction_event(
                 page_url_hash=page_url_hash,
                 top_element_hash=top_element_hash,
                 device_type=device_type,
+                browser_family=browser_family,
             )
         )
 
 
 async def query_timeseries(db: AsyncSession, project_id: str, hours: int) -> list[dict]:
+    # Returns aggregated series by hour+metric_type.
+
     cutoff = datetime.now(timezone.utc) - timedelta(hours=hours)
     cutoff_hour = cutoff.replace(minute=0, second=0, microsecond=0).isoformat().replace("+00:00", "Z")
 

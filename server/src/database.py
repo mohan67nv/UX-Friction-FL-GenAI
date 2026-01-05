@@ -136,6 +136,24 @@ class FrictionEvent(Base):
     page_url_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
     top_element_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
     device_type: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    browser_family: Mapped[str | None] = mapped_column(String(50), nullable=True)
+
+
+class UXAuditorChatMessage(Base):
+    __tablename__ = "ux_auditor_chat_messages"
+
+    id: Mapped[str] = mapped_column(String(36), primary_key=True, default=lambda: str(uuid.uuid4()))
+    project_id: Mapped[str] = mapped_column(String(36), index=True)
+
+    # No user id stored (project-level history). Avoid PII.
+    role: Mapped[str] = mapped_column(String(20))  # user|assistant
+    content: Mapped[str] = mapped_column(Text)
+
+    # Minimal metadata (optional)
+    model: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    confidence: Mapped[float | None] = mapped_column(Integer, nullable=True)
+
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=lambda: datetime.now(timezone.utc))
 
 
 class GlobalModel(Base):

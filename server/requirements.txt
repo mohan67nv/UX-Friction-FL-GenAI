@@ -7,6 +7,15 @@ python-dotenv==1.0.1
 PyYAML==6.0.2
 httpx==0.28.1
 
+# GenAI / semantic retrieval (v3.0)
+qdrant-client==1.12.1
+sentence-transformers==3.3.1
+
+# Agentic RAG (optional but included for v3.0)
+langchain==0.3.14
+langchain-community==0.3.14
+haystack-ai==2.8.0
+
 
 # Production-ready auth + DB (SQLite dev, Postgres prod)
 sqlalchemy==2.0.36

@@ -17,7 +17,12 @@ from .global_sync import apply_downloaded_model, download_global_model, export_l
 from .auth import create_access_token, get_current_user, verify_password
 from .database import AsyncSessionLocal, GlobalModel, init_db, get_db
 from .models_recommendations import Recommendation
+from .database import UXAuditorChatMessage
+from .schemas_chat import AppendChatMessageRequest, ChatHistoryResponse, ChatMessageView
 from .schemas_recommendations import BenchmarksResponse, MarkDoneResponse, RecommendationView
+from .schemas_genai import UXAuditorAction, UXAuditorAskRequest, UXAuditorAskResponse, UXAuditorEvidence
+from .genai_ux_auditor import answer_question as genai_answer_question
+from .intent_index import index_intent_embedding
 from .schemas import (
     AuthResponse,
     CreateProjectRequest,
@@ -65,11 +70,26 @@ OPTOUT_DEFAULT_DAYS = int(os.getenv("OPTOUT_DEFAULT_DAYS", "365"))
 from .weights import ModelWeights
 
 
+class Cohorts(BaseModel):
+    # Privacy-safe coarse cohorts. Do NOT send full userAgent or any identifiers.
+    device_type: str | None = None  # desktop|mobile|tablet|unknown
+    browser_family: str | None = None  # chrome|safari|firefox|edge|other|unknown
+
+
+class IntentEmbeddingSummary(BaseModel):
+    dim: int = 0
+    vector: list[float] = []
+    count: int = 0
+    backend: str = "none"  # onnx|none
+
+
 class FederatedUpdate(BaseModel):
     client_id: str = Field(..., min_length=64, max_length=64)
     weight_delta: ModelWeights
     num_samples: int = Field(..., gt=0, le=50_000)
     timestamp: int
+    cohorts: Cohorts | None = None
+    intent_embedding: IntentEmbeddingSummary | None = None
 
 
 class OptOutRequest(BaseModel):
@@ -608,6 +628,114 @@ async def dashboard_recommendations_done(
     return MarkDoneResponse()
 
 
+@app.get("/dashboard/ux-auditor/history", response_model=ChatHistoryResponse)
+async def ux_auditor_history(
+    project_id: str,
+    limit: int = 50,
+    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> ChatHistoryResponse:
+    try:
+        role = await crud.require_project_access(db, user["sub"], project_id)  # type: ignore[index]
+    except PermissionError:
+        raise HTTPException(status_code=403, detail="No access to project")
+
+    require_permission(role, "read")
+
+    from sqlalchemy import select
+
+    rows = await db.execute(
+        select(UXAuditorChatMessage)
+        .where(UXAuditorChatMessage.project_id == project_id)
+        .order_by(UXAuditorChatMessage.created_at.desc())
+        .limit(max(1, min(200, int(limit))))
+    )
+    items = list(rows.scalars().all())
+    items.reverse()
+
+    return ChatHistoryResponse(
+        items=[
+            ChatMessageView(
+                id=m.id,
+                project_id=m.project_id,
+                role=m.role,
+                content=m.content,
+                model=m.model,
+                confidence=float(m.confidence) if m.confidence is not None else None,
+                created_at=m.created_at.isoformat(),
+            )
+            for m in items
+        ]
+    )
+
+
+@app.post("/dashboard/ux-auditor/append", response_model=ChatMessageView)
+async def ux_auditor_append(
+    body: AppendChatMessageRequest,
+    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> ChatMessageView:
+    try:
+        role = await crud.require_project_access(db, user["sub"], body.project_id)  # type: ignore[index]
+    except PermissionError:
+        raise HTTPException(status_code=403, detail="No access to project")
+
+    require_permission(role, "write")
+
+    msg = UXAuditorChatMessage(
+        project_id=body.project_id,
+        role=body.role,
+        content=body.content,
+        model=body.model,
+        confidence=body.confidence,
+    )
+    db.add(msg)
+    await db.flush()
+
+    return ChatMessageView(
+        id=msg.id,
+        project_id=msg.project_id,
+        role=msg.role,
+        content=msg.content,
+        model=msg.model,
+        confidence=float(msg.confidence) if msg.confidence is not None else None,
+        created_at=msg.created_at.isoformat(),
+    )
+
+
+@app.post("/dashboard/ux-auditor/ask", response_model=UXAuditorAskResponse)
+async def ux_auditor_ask(
+    body: UXAuditorAskRequest,
+    user: dict = Depends(get_current_user),
+    db: AsyncSession = Depends(get_db),
+) -> UXAuditorAskResponse:
+    # Access control: must be a project member.
+    try:
+        role = await crud.require_project_access(db, user["sub"], body.project_id)  # type: ignore[index]
+    except PermissionError:
+        raise HTTPException(status_code=403, detail="No access to project")
+
+    require_permission(role, "read")
+
+    result = await genai_answer_question(
+        db=db,
+        project_id=body.project_id,
+        question=body.question,
+        time_range=body.time_range,
+        lang=(body.lang or "de").lower(),
+    )
+
+    evidence = [UXAuditorEvidence(title=d.title, content=d.content[:1000], source=d.source) for d in result.evidence]
+    actions = [UXAuditorAction(action=a[0], label=a[1], description=a[2]) for a in result.actions]
+    return UXAuditorAskResponse(
+        answer=result.answer,
+        evidence=evidence,
+        actions=actions,
+        confidence=result.confidence,
+        model=result.model,
+    )
+
+
 @app.get("/dashboard/benchmarks", response_model=BenchmarksResponse)
 async def dashboard_benchmarks(
     project_id: str,
@@ -704,6 +832,22 @@ async def model_download(project_id: str = Depends(get_project_id_from_api_key),
     return ModelWeights.model_validate_json(row[0])
 
 
+@app.get("/api/v1/model/intent-embedder.onnx")
+async def model_intent_embedder_onnx() -> Any:
+    """Serve the intent-embedder ONNX model artifact if present.
+
+    This is a tiny Transformer encoder (BERT-like) that outputs:
+    - embedding: [batch, dim]
+    - logits: [batch, 5]
+    """
+    from fastapi.responses import FileResponse
+
+    path = os.getenv("INTENT_EMBEDDER_ONNX_PATH", "ml-training/intent_embedder.onnx")
+    if not os.path.exists(path):
+        raise HTTPException(status_code=404, detail="Intent embedder model not available")
+    return FileResponse(path, media_type="application/octet-stream")
+
+
 @app.get("/api/v1/model/foundation.onnx")
 async def model_foundation_onnx() -> Any:
     """Serve the foundation ONNX model artifact if present.
@@ -792,6 +936,26 @@ async def aggregate(
 
     # For now interpret as "rage" signal. Later: send class vector.
     incidents = int(round(rage_ratio * update.num_samples))
-    await crud.increment_friction_event(db, project_id, "rage", update.timestamp, incidents, intensity=rage_ratio)
+    await crud.increment_friction_event(
+        db,
+        project_id,
+        "rage",
+        update.timestamp,
+        incidents,
+        intensity=rage_ratio,
+        device_type=(update.cohorts.device_type if update.cohorts else None),
+        browser_family=(update.cohorts.browser_family if update.cohorts else None),
+    )
+
+    # Optional: index aggregated on-device intent embedding summary (no PII)
+    if update.intent_embedding and update.intent_embedding.vector:
+        index_intent_embedding(
+            project_id=project_id,
+            ts_ms=update.timestamp,
+            embedding=update.intent_embedding.vector,
+            source="intent",
+            title="On-device intent embedding summary",
+            content=f"backend={update.intent_embedding.backend} dim={update.intent_embedding.dim} count={update.intent_embedding.count}",
+        )
 
     return {"status": "received"}
