@@ -23,7 +23,7 @@ export default async function PrivacyPage() {
               <h3 style={{ fontSize: 16, fontWeight: 700, marginTop: 16, marginBottom: 8 }}>Datenerfassung auf dieser Website</h3>
               <p><strong>Wer ist verantwortlich für die Datenerfassung auf dieser Website?</strong></p>
               <p>Die Datenverarbeitung auf dieser Website erfolgt durch den Websitebetreiber. Dessen Kontaktdaten 
-              können Sie dem Abschnitt „Hinweis zur Verantwortlichen Stelle" in dieser Datenschutzerklärung entnehmen.</p>
+              können Sie dem Abschnitt „Hinweis zur Verantwortlichen Stelle“ in dieser Datenschutzerklärung entnehmen.</p>
               
               <p><strong>Wie erfassen wir Ihre Daten?</strong></p>
               <p>Ihre Daten werden zum einen dadurch erhoben, dass Sie uns diese mitteilen. Hierbei kann es sich z.B. um 
@@ -108,7 +108,7 @@ export default async function PrivacyPage() {
             <div style={{ color: 'var(--m-text-secondary)', lineHeight: 1.8 }}>
               <p>Diese Seite nutzt aus Sicherheitsgründen und zum Schutz der Übertragung vertraulicher Inhalte eine 
               SSL- bzw. TLS-Verschlüsselung. Eine verschlüsselte Verbindung erkennen Sie daran, dass die Adresszeile 
-              des Browsers von „http://" auf „https://" wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.</p>
+              des Browsers von „http://“ auf „https://“ wechselt und an dem Schloss-Symbol in Ihrer Browserzeile.</p>
             </div>
           </section>
         </div>

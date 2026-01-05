@@ -48,8 +48,8 @@ export default async function CustomersPage() {
                 <div>
                   <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 12, color: 'var(--m-text)' }}>SaaS Startup GmbH</h3>
                   <div className="m_sub" style={{ marginBottom: 16, fontSize: 16 }}>
-                    "We reduced checkout friction by 47% in 3 weeks using ZeroBanner's AI recommendations. 
-                    Best part? No cookie banner needed, so we kept 100% of our analytics data."
+                    {`“We reduced checkout friction by 47% in 3 weeks using ZeroBanner’s AI recommendations.
+                    Best part? No cookie banner needed, so we kept 100% of our analytics data.”`}
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                     <span className="m_pill">+47% Conversion</span>
@@ -74,8 +74,8 @@ export default async function CustomersPage() {
                 <div>
                   <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 12, color: 'var(--m-text)' }}>E-Commerce Pro</h3>
                   <div className="m_sub" style={{ marginBottom: 16, fontSize: 16 }}>
-                    "ZeroBanner identified a Safari CSS bug causing 234 rage-clicks per week. 
-                    Fixed it in 15 minutes, recovered €12.4K monthly revenue. ROI: 2,480%."
+                    {`“ZeroBanner identified a Safari CSS bug causing 234 rage-clicks per week.
+                    Fixed it in 15 minutes, recovered €12.4K monthly revenue. ROI: 2,480%.”`}
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                     <span className="m_pill">15 Min Fix</span>
@@ -100,8 +100,8 @@ export default async function CustomersPage() {
                 <div>
                   <h3 style={{ fontSize: 24, fontWeight: 800, marginBottom: 12, color: 'var(--m-text)' }}>FinTech Berlin</h3>
                   <div className="m_sub" style={{ marginBottom: 16, fontSize: 16 }}>
-                    "As a regulated financial service, we can't use Google Analytics or Hotjar. 
-                    ZeroBanner gave us enterprise-grade UX insights while staying 100% DSGVO compliant."
+                    {`“As a regulated financial service, we can’t use Google Analytics or Hotjar.
+                    ZeroBanner gave us enterprise-grade UX insights while staying 100% DSGVO compliant.”`}
                   </div>
                   <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
                     <span className="m_pill">100% DSGVO Compliant</span>

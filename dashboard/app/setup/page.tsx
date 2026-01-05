@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { Shell } from '../components/Shell';
 
 export default function SetupPage() {
@@ -41,9 +42,9 @@ export default function SetupPage() {
             <button className="btn" onClick={bootstrap} disabled={loading}>
               {loading ? 'Creating…' : 'Create project'}
             </button>
-            <a className="btn btnSecondary" href="/" style={{ padding: '10px 12px', borderRadius: 10 }}>
+            <Link className="btn btnSecondary" href="/" style={{ padding: '10px 12px', borderRadius: 10 }}>
               Go to overview
-            </a>
+            </Link>
           </div>
           <div className="kpiSmall" style={{ marginTop: 12 }}>
             This is legacy MVP setup. Production flow is: Sign up → Create project → Create API key.

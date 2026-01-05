@@ -16,8 +16,8 @@ export default async function TermsPage() {
             <h2 style={{ fontSize: 20, fontWeight: 800, marginBottom: 10 }}>1. Geltungsbereich</h2>
             <div style={{ color: 'var(--m-text-secondary)', lineHeight: 1.8 }}>
               <p>Diese Allgemeinen Geschäftsbedingungen (AGB) gelten für alle Verträge über die Nutzung der 
-              ZeroBanner-Software (nachfolgend „Software" oder „Dienst") zwischen der ZeroBanner GmbH 
-              (nachfolgend „Anbieter") und dem Kunden.</p>
+              ZeroBanner-Software (nachfolgend „Software“ oder „Dienst“) zwischen der ZeroBanner GmbH 
+              (nachfolgend „Anbieter“) und dem Kunden.</p>
               <p>Abweichende, entgegenstehende oder ergänzende Allgemeine Geschäftsbedingungen des Kunden werden 
               nicht Vertragsbestandteil, es sei denn, der Anbieter stimmt ihrer Geltung ausdrücklich schriftlich zu.</p>
             </div>
@@ -88,7 +88,7 @@ export default async function TermsPage() {
             <div style={{ color: 'var(--m-text-secondary)', lineHeight: 1.8 }}>
               <p>Der Anbieter verarbeitet personenbezogene Daten des Kunden ausschließlich im Rahmen der 
               Datenschutzerklärung und der gesetzlichen Bestimmungen, insbesondere der DSGVO.</p>
-              <p>Die ZeroBanner-Software arbeitet nach dem Prinzip „Privacy by Design":</p>
+              <p>Die ZeroBanner-Software arbeitet nach dem Prinzip „Privacy by Design“:</p>
               <ul style={{ paddingLeft: 24, marginTop: 12 }}>
                 <li>Keine Speicherung von personenbezogenen Daten der Website-Besucher</li>
                 <li>Keine IP-Adressen, keine Cookies, keine Session-IDs</li>

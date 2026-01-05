@@ -169,7 +169,7 @@ export default async function DocsPage() {
               </h3>
               <div style={{ background: 'var(--m-bg2)', padding: 20, borderRadius: 10, border: '1px solid var(--m-border)' }}>
                 <div style={{ fontFamily: 'monospace', fontSize: 14, color: 'var(--m-text-secondary)' }}>
-                  <div style={{ color: 'var(--m-muted)' }}>// Track button clicks</div>
+                  <div style={{ color: 'var(--m-muted)' }}>{'// Track button clicks'}</div>
                   <div>{'ZeroBanner.track(\'checkout_started\', {'}</div>
                   <div>{'  value: 89.99,'}</div>
                   <div>{'  currency: \'EUR\''}</div>
@@ -185,7 +185,7 @@ export default async function DocsPage() {
               </h3>
               <div style={{ background: 'var(--m-bg2)', padding: 20, borderRadius: 10, border: '1px solid var(--m-border)' }}>
                 <div style={{ fontFamily: 'monospace', fontSize: 14, color: 'var(--m-text-secondary)' }}>
-                  <div style={{ color: 'var(--m-muted)' }}>// app/layout.tsx</div>
+                  <div style={{ color: 'var(--m-muted)' }}>{'// app/layout.tsx'}</div>
                   <div>{'import { ZeroBannerProvider } from \'@privacymanu/next\''}</div>
                   <div>{''}</div>
                   <div>{'export default function RootLayout({ children }) {'}</div>

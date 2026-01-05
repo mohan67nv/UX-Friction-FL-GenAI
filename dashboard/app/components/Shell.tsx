@@ -44,6 +44,9 @@ export function Shell(props: { active: 'overview' | 'setup' | 'app'; children: R
           <Link className={''} href="/app/recommendations">
             {t('navRecommendations')}
           </Link>
+          <Link className={''} href="/app/auditor">
+            AI Auditor
+          </Link>
           <Link className={''} href="/app/benchmarks">
             {t('navBenchmarks')}
           </Link>
