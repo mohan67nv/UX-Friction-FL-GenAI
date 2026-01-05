@@ -1,0 +1,28 @@
+PrivacyEdge Analytics - DPIA Template (Germany-first)
+
+1. Processing overview
+- Purpose: UX improvement / friction detection
+- Data categories processed: interaction-derived feature vectors in RAM only, aggregated model updates
+- Data stored server-side: aggregated metrics + federated model tensors (no raw event data)
+
+2. Lawful basis
+- Recommended: Legitimate Interest (GDPR Art. 6(1)(f))
+- German context: Designed to avoid §25 TDDDG scope by not storing information on end devices for tracking.
+
+3. Necessity & proportionality
+- Minimization: no cookies, no session replay, no user IDs
+- Security: TLS in transit, EU hosting, no PII storage
+
+4. Risks
+- Re-identification risk: reduced via aggregation + optional DP noise
+- Misconfiguration risk: mitigated by default settings
+
+5. Measures
+- Differential privacy (optional)
+- Retention controls for aggregated metrics
+- Opt-out endpoint + SDK opt-out support
+
+6. Residual risk
+- Expected residual risk: low
+
+(Template for review by DPO / Datenschutzbeauftragter.)

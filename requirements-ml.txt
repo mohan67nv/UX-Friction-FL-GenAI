@@ -1,0 +1,4 @@
+# Optional ML training requirements (foundation model training)
+# Install: pip install -r requirements-ml.txt
+
+-r ml-training/requirements.txt

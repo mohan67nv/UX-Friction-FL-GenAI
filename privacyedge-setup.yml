@@ -1,0 +1,21 @@
+deployment_name: "PrivacyEdge Self-Hosted"
+
+# Options: saas | self_hosted_isolated | self_hosted_collaborative
+mode: self_hosted_isolated
+
+# If collaborative:
+global_sync:
+  enabled: false
+  frequency: weekly
+  endpoint: "https://global.privacyedge.io"
+  api_key: ""  # customer instance key for global sync (optional)
+  deployment_id: "" # generated for self-hosted instances (run server/scripts/init_selfhost_config.py)
+
+privacy:
+  differential_privacy:
+    enabled: true
+    epsilon: 1.0
+
+emergency_controls:
+  offline_mode: false
+  auto_reconnect: true

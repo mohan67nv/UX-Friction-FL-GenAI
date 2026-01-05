@@ -1,0 +1,29 @@
+PrivacyEdge Analytics - DPA / AVV Template (Germany-first)
+
+1. Parties
+- Controller: Customer
+- Processor: PrivacyEdge Analytics
+
+2. Subject matter
+- Provision of privacy-first UX analytics
+
+3. Nature and purpose
+- Aggregated UX friction metrics and federated model aggregation
+
+4. Types of data
+- Aggregated metrics
+- Hashed client identifiers (non-reversible)
+- API key hashes
+
+5. Categories of data subjects
+- Website visitors (not directly identified)
+
+6. Security measures (Art. 32 GDPR)
+- Encryption in transit (TLS)
+- No storage of IP addresses, session IDs, raw events
+- Access controls and key management
+
+7. Sub-processors
+- EU cloud hosting (to be specified per customer)
+
+(Template only; requires legal review.)

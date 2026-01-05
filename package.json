@@ -1,0 +1,15 @@
+{
+  "name": "privacyedge",
+  "private": true,
+  "packageManager": "pnpm@9.15.0",
+  "workspaces": [
+    "client",
+    "dashboard"
+  ],
+  "scripts": {
+    "dev": "pnpm -r dev",
+    "build": "pnpm -r build",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test"
+  }
+}
