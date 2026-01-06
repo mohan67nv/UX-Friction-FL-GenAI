@@ -1,7 +1,9 @@
-# PrivacyEdge / ZeroBanner (Workspace)
+# ZeroBanner (Workspace)
 
 This repo contains:
 - `server/`: FastAPI backend (dashboard APIs + SDK ingest)
+
+Product name used in UI/demo: **ZeroBanner**.
 - `dashboard/`: Next.js dashboard + marketing pages
 - `client/`: Browser SDK (ONNX intent embedder runner)
 
@@ -63,8 +65,73 @@ To avoid dimension conflicts, the system uses separate collections:
 - optional: `QDRANT_TEXT_COLLECTION`
 - optional: `QDRANT_INTENT_COLLECTION`
 
+## LLM providers (optional)
+
+The UX Auditor can generate richer narrative answers via an optional LLM backend.
+If no provider is configured, the system falls back to a deterministic heuristic mode.
+
+### DeepSeek (recommended)
+
+Set:
+- `LLM_BACKEND=auto` (or `deepseek`)
+- `DEEPSEEK_API_KEY=...`
+- `DEEPSEEK_BASE_URL=https://api.deepseek.com`
+- `DEEPSEEK_MODEL=deepseek-chat` (or `deepseek-reasoner`, `deepseek-coder`)
+
+### Ollama (local)
+
+Set:
+- `LLM_BACKEND=ollama`
+- `OLLAMA_URL=http://localhost:11434`
+- `OLLAMA_MODEL=llama3.1:8b-instruct`
+
+### OpenAI (optional)
+
+Set:
+- `LLM_BACKEND=openai`
+- `OPENAI_API_KEY=...`
+- `OPENAI_MODEL=gpt-4o-mini`
+
 Notes:
 - Qdrant collection creation is non-destructive (existing data is not dropped).
+
+## Interview demo (Docker)
+
+1) Start the stack:
+
+```bash
+docker compose up -d --build
+```
+
+2) Seed demo data (creates demo user/org/project + recommendations + friction time series):
+
+```bash
+docker compose exec api python -m src.demo_harness
+```
+
+3) Login to the dashboard:
+- http://localhost:3000/login
+
+Use printed demo credentials.
+
+4) Open demo pages:
+- Overview: http://localhost:3000/app/overview
+- Recommendations: http://localhost:3000/app/recommendations
+- Auditor: http://localhost:3000/app/auditor
+
+### Optional: simulate FL rounds
+
+Set env vars in `.env`:
+
+- `DEMO_FL_ROUNDS=3`
+- `DEMO_FL_CLIENTS_PER_ROUND=10`
+- `DP_EPSILON=1.0` (optional)
+
+Then re-run:
+
+```bash
+docker compose exec api python -m src.demo_harness
+```
 
 ## Tests
 

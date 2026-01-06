@@ -9,6 +9,11 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U privacyedge -d privacyedge"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
   redis:
     image: redis:7
@@ -26,26 +31,55 @@ services:
     build:
       context: ./server
     environment:
-      DATABASE_URL: postgresql://privacyedge:privacyedge@postgres:5432/privacyedge
-      REDIS_URL: redis://redis:6379/0
-      API_KEY_SALT: change-me
-      CORS_ORIGINS: http://localhost:3000
-      # GenAI / semantic retrieval (optional)
-      QDRANT_URL: http://qdrant:6333
-      EMBEDDINGS_BACKEND: hash
-      LLM_BACKEND: auto
+      # Namespace these vars to avoid accidental collision with other projects on the host
+      DATABASE_URL: ${PRIVACYEDGE_DATABASE_URL:-postgresql://privacyedge:privacyedge@postgres:5432/privacyedge}
+      REDIS_URL: ${PRIVACYEDGE_REDIS_URL:-redis://redis:6379/0}
+      API_KEY_SALT: ${PRIVACYEDGE_API_KEY_SALT:-change-me}
+      CORS_ORIGINS: ${PRIVACYEDGE_CORS_ORIGINS:-http://localhost:3000}
+
+      # GenAI / semantic retrieval
+      QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
+      QDRANT_TEXT_COLLECTION: ${QDRANT_TEXT_COLLECTION:-ux_auditor_docs}
+      QDRANT_INTENT_COLLECTION: ${QDRANT_INTENT_COLLECTION:-intent_embeddings}
+      EMBEDDINGS_BACKEND: ${EMBEDDINGS_BACKEND:-hash}
+
+      # LLM routing: prefer DeepSeek if DEEPSEEK_API_KEY is set
+      LLM_BACKEND: ${LLM_BACKEND:-auto}
+      LLM_TIMEOUT_SECONDS: ${LLM_TIMEOUT_SECONDS:-25}
+
+      # DeepSeek (OpenAI-compatible)
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      DEEPSEEK_BASE_URL: ${DEEPSEEK_BASE_URL:-https://api.deepseek.com}
+      DEEPSEEK_MODEL: ${DEEPSEEK_MODEL:-deepseek-chat}
+      DEEPSEEK_TEMPERATURE: ${DEEPSEEK_TEMPERATURE:-0.2}
+
+      # Multi-layer auditor mode
+      GENAI_MULTILAYER: ${GENAI_MULTILAYER:-0}
+      GENAI_MULTILAYER_CODER: ${GENAI_MULTILAYER_CODER:-0}
+      DEEPSEEK_CODER_MODEL: ${DEEPSEEK_CODER_MODEL:-deepseek-coder}
+
+      # Demo UX: auto-create org + project on signup so the dashboard works immediately.
+      AUTO_BOOTSTRAP_ON_REGISTER: ${AUTO_BOOTSTRAP_ON_REGISTER:-1}
     ports:
       - "8000:8000"
+    restart: unless-stopped
     depends_on:
-      - postgres
-      - redis
-      - qdrant
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_started
+      qdrant:
+        condition: service_started
 
   dashboard:
     build:
-      context: ./dashboard
+      context: .
+      dockerfile: dashboard/Dockerfile
     environment:
+      # Used by browser-side code/examples
       NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      # Used by Next.js route handlers (inside docker network)
+      INTERNAL_API_BASE_URL: http://api:8000
       NEXT_PUBLIC_API_KEY: dev-key-change-me
     ports:
       - "3000:3000"
