@@ -69,32 +69,72 @@ async def _ollama_chat(*, system: str, user: str, timeout: float) -> LLMResult:
         return LLMResult(text=text, model=model, backend="ollama")
 
 
+async def _deepseek_chat(*, system: str, user: str, timeout: float) -> LLMResult:
+    api_key = os.getenv("DEEPSEEK_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("DEEPSEEK_API_KEY missing")
+
+    base_url = os.getenv("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    model = os.getenv("DEEPSEEK_MODEL", "deepseek-chat")
+
+    payload = {
+        "model": model,
+        "temperature": float(os.getenv("DEEPSEEK_TEMPERATURE", os.getenv("OPENAI_TEMPERATURE", "0.2"))),
+        "messages": [
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
+    }
+
+    async with httpx.AsyncClient(timeout=timeout) as client:
+        r = await client.post(
+            f"{base_url}/v1/chat/completions",
+            headers={"authorization": f"Bearer {api_key}", "content-type": "application/json"},
+            json=payload,
+        )
+        r.raise_for_status()
+        data = r.json()
+        text = str(data["choices"][0]["message"]["content"]).strip()
+        return LLMResult(text=text, model=model, backend="deepseek")
+
+
 async def generate(*, system: str, user: str) -> LLMResult:
-    """Generate with OpenAI or Ollama.
+    """Generate with DeepSeek, OpenAI or Ollama.
 
     Selection:
-    - LLM_BACKEND=auto (default): prefer OpenAI if key present, else Ollama if reachable.
-    - LLM_BACKEND=openai|ollama: force.
+    - LLM_BACKEND=auto (default): prefer DeepSeek if key present, else OpenAI if key present, else Ollama.
+    - LLM_BACKEND=deepseek|openai|ollama: force.
 
-    Fallback: if the selected backend fails, try the other one.
+    Fallback: if the selected backend fails, try the others.
     """
 
     backend = os.getenv("LLM_BACKEND", "auto").strip().lower()
     timeout = float(os.getenv("LLM_TIMEOUT_SECONDS", "25"))
 
+    prefer_deepseek = bool(os.getenv("DEEPSEEK_API_KEY"))
     prefer_openai = bool(os.getenv("OPENAI_API_KEY"))
 
     order: list[str]
-    if backend == "openai":
-        order = ["openai", "ollama"]
+    if backend == "deepseek":
+        order = ["deepseek", "openai", "ollama"]
+    elif backend == "openai":
+        order = ["openai", "deepseek", "ollama"]
     elif backend == "ollama":
-        order = ["ollama", "openai"]
+        order = ["ollama", "deepseek", "openai"]
     else:
-        order = ["openai", "ollama"] if prefer_openai else ["ollama", "openai"]
+        # auto
+        if prefer_deepseek:
+            order = ["deepseek", "openai", "ollama"]
+        elif prefer_openai:
+            order = ["openai", "deepseek", "ollama"]
+        else:
+            order = ["ollama", "deepseek", "openai"]
 
     last_err: Exception | None = None
     for b in order:
         try:
+            if b == "deepseek":
+                return await _deepseek_chat(system=system, user=user, timeout=timeout)
             if b == "openai":
                 return await _openai_chat(system=system, user=user, timeout=timeout)
             return await _ollama_chat(system=system, user=user, timeout=timeout)

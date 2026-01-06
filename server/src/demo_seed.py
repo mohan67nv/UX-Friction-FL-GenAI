@@ -14,10 +14,10 @@ from .models_recommendations import Recommendation
 async def seed_demo(db: AsyncSession) -> dict:
     """Seed demo data into an already-initialized database."""
 
-    demo_email = "demo@privacyedge.local"
+    demo_email = "demo@zerobanner.local"
     demo_password = "DemoPassword123!"
-    org_name = "PrivacyEdge Demo GmbH"
-    org_slug = "privacyedge-demo-gmbh"
+    org_name = "ZeroBanner Demo GmbH"
+    org_slug = "zerobanner-demo-gmbh"
 
     user = (await db.execute(select(User).where(User.email == demo_email))).scalar_one_or_none()
     if not user:
@@ -130,7 +130,14 @@ async def seed_demo(db: AsyncSession) -> dict:
     ]
 
     for r in demo_recos:
-        db.add(r)
+        # Idempotent seed: skip if (project_id,title) already exists
+        exists = (
+            await db.execute(
+                select(Recommendation.id).where(and_(Recommendation.project_id == project.id, Recommendation.title == r.title))
+            )
+        ).first()
+        if not exists:
+            db.add(r)
 
     # Seed last 7 days
     days = 7

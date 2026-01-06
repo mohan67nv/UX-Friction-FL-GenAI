@@ -11,6 +11,7 @@ from . import crud
 from .crud_cohorts import query_cohort_breakdown
 from .embeddings import embed_text
 from .llm_backends import generate as llm_generate
+from .genai_multilayer import enabled as multilayer_enabled, multilayer_answer
 from .genai_orchestrator import enabled as orchestrator_enabled, rag_answer
 from .models_recommendations import Recommendation
 from .vector_store import VectorDoc, get_vector_store, now_ts
@@ -194,7 +195,7 @@ def _build_context_text(contexts: list[Doc]) -> str:
 
 def _system_prompt(lang: str) -> str:
     system = (
-        "You are PrivaLytics AI, a privacy-first UX analytics auditor. "
+        "You are ZeroBanner AI, a privacy-first UX analytics auditor. "
         "You MUST ONLY use the provided aggregated context; do not invent facts. "
         "Do not request or output PII, URLs, raw user identifiers, or session replay. "
         "If the evidence is insufficient, say so and propose what aggregated data would be needed. "
@@ -337,6 +338,20 @@ async def answer_question(
                 pass
 
         try:
+            # Optional multi-layer mode (DeepSeek-only) for stronger reasoning.
+            if multilayer_enabled() and os.getenv("DEEPSEEK_API_KEY"):
+                ml = await multilayer_answer(
+                    question=question, context_text=_build_context_text(contexts), lang=lang
+                )
+                return AuditorResult(
+                    answer=ml.answer,
+                    evidence=contexts,
+                    actions=actions,
+                    confidence=confidence,
+                    model=ml.model,
+                    retrieval_backend=retrieval_backend,
+                )
+
             ans, model = await _llm_answer(question=question, contexts=contexts, lang=lang)
             return AuditorResult(
                 answer=ans,

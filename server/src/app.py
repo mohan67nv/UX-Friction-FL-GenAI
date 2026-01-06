@@ -220,7 +220,7 @@ aggregator = FederatedAggregator()
 
 cfg = load_config()
 
-app = FastAPI(title="PrivacyEdge Analytics API", version="0.2.0")
+app = FastAPI(title="ZeroBanner Analytics API", version="0.2.0")
 
 # Global sync endpoints (used by SaaS global server)
 from .routes_global_sync import router as global_sync_router
@@ -320,9 +320,24 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)) ->
 
     user = await crud.create_user(db, body.email, body.password, body.name)
 
-    # Create default org if provided
-    if body.organization_name:
-        await crud.create_org_with_owner(db, user.id, body.organization_name)
+    # Demo-friendly bootstrap:
+    # - Always ensure the user has at least one organization and one project
+    #   when AUTO_BOOTSTRAP_ON_REGISTER is enabled.
+    auto_bootstrap = os.getenv("AUTO_BOOTSTRAP_ON_REGISTER", "1").strip().lower() in ("1", "true", "yes")
+
+    org_name = body.organization_name
+    if auto_bootstrap and not org_name:
+        org_name = (body.name or "Demo") + " Org"
+
+    if org_name:
+        org = await crud.create_org_with_owner(db, user.id, org_name)
+        if auto_bootstrap:
+            # Create a default project so the dashboard/auditor is usable immediately.
+            try:
+                await crud.create_project(db, org.id, name="Website", domain=None, privacy_mode="high")
+            except Exception:
+                # If project already exists or any constraint hits, ignore.
+                pass
 
     token = create_access_token(user.id, user.email)
     return AuthResponse(access_token=token, user={"id": user.id, "email": user.email, "name": user.name})
@@ -333,6 +348,21 @@ async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)) -> AuthR
     user = await crud.get_user_by_email(db, body.email)
     if not user or not verify_password(body.password, user.password_hash):
         raise HTTPException(status_code=401, detail="Invalid credentials")
+
+    # Demo-friendly bootstrap for *existing* accounts that were created without an org/project.
+    auto_bootstrap = os.getenv("AUTO_BOOTSTRAP_ON_LOGIN", os.getenv("AUTO_BOOTSTRAP_ON_REGISTER", "1")).strip().lower() in (
+        "1",
+        "true",
+        "yes",
+    )
+    if auto_bootstrap:
+        orgs = await crud.list_orgs_for_user(db, user.id)
+        if not orgs:
+            org = await crud.create_org_with_owner(db, user.id, (user.name or "Demo") + " Org")
+            try:
+                await crud.create_project(db, org.id, name="Website", domain=None, privacy_mode="high")
+            except Exception:
+                pass
 
     token = create_access_token(user.id, user.email)
     return AuthResponse(access_token=token, user={"id": user.id, "email": user.email, "name": user.name})

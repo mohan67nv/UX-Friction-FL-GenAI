@@ -33,60 +33,24 @@ async def rag_answer(*, question: str, contexts: list[_DocLike], lang: str) -> O
     - We use LangChain only for future multi-agent flows (kept minimal here).
     """
 
-    # Lazy imports so base install doesn't hard-crash.
-    try:
-        # Haystack v2
-        from haystack import Document
-        from haystack.components.builders.prompt_builder import PromptBuilder
-        from haystack.components.generators import OpenAIGenerator
-        from haystack.components.generators.ollama import OllamaGenerator
-        from haystack.core.pipeline import Pipeline
-    except Exception as e:  # pragma: no cover
-        raise RuntimeError(f"Haystack not available: {e}")
+    orch = os.getenv("GENAI_ORCHESTRATOR", "native").strip().lower()
 
-    # Convert contexts into Haystack docs
-    docs = [Document(content=f"[{c.source}] {c.title}\n{c.content}") for c in contexts]
+    # LangChain orchestrator (multi-step)
+    if orch == "langchain":
+        from .genai_langchain import langchain_answer
 
-    # Choose generator backend
-    llm_backend = os.getenv("LLM_BACKEND", "auto").strip().lower()
-    use_openai = bool(os.getenv("OPENAI_API_KEY"))
+        from .genai_ux_auditor import _build_context_text  # avoid duplication
 
-    generator = None
-    model_label = "haystack"
+        ctx = _build_context_text(list(contexts))
+        r = await langchain_answer(question=question, context_text=ctx, lang=lang)
+        return OrchestratorResult(answer=r.answer, model=r.model)
 
-    if llm_backend in ("openai", "auto") and use_openai:
-        generator = OpenAIGenerator(model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"), api_key=os.getenv("OPENAI_API_KEY"))
-        model_label = f"haystack:openai:{os.getenv('OPENAI_MODEL','gpt-4o-mini')}"
-    else:
-        generator = OllamaGenerator(model=os.getenv("OLLAMA_MODEL", "llama3.1:8b-instruct"), url=os.getenv("OLLAMA_URL", "http://localhost:11434"))
-        model_label = f"haystack:ollama:{os.getenv('OLLAMA_MODEL','llama3.1:8b-instruct')}"
+    # --- Haystack orchestrator (full pipeline)
+    if orch == "haystack":
+        from .genai_haystack_pipeline import haystack_rag_answer
 
-    template = (
-        "You are PrivaLytics AI, a privacy-first UX analytics auditor.\n"
-        "Use ONLY the provided aggregated documents. Do not invent facts.\n"
-        "Do not request or output PII, URLs, raw user identifiers, or session replay.\n\n"
-        "Question: {{question}}\n\n"
-        "Aggregated documents:\n"
-        "{% for doc in documents %}---\n{{ doc.content }}\n{% endfor %}\n\n"
-        "Return:\n"
-        "1) Root cause hypothesis\n"
-        "2) Evidence bullets (3-6)\n"
-        "3) Recommended fix steps (3-5)\n"
-        "4) Impact estimate if possible\n"
-        "5) Confidence (0-100)\n"
-    )
+        docs = [f"[{c.source}] {c.title}\n{c.content}" for c in contexts]
+        r = await haystack_rag_answer(question=question, documents=docs, lang=lang)
+        return OrchestratorResult(answer=r.answer, model=r.model)
 
-    prompt = PromptBuilder(template=template)
-
-    pipe = Pipeline()
-    pipe.add_component("prompt", prompt)
-    pipe.add_component("llm", generator)
-    pipe.connect("prompt", "llm")
-
-    result = pipe.run({"prompt": {"question": question, "documents": docs}})
-
-    # Haystack generators return {"replies": ["..."]}
-    replies = result["llm"].get("replies") if isinstance(result.get("llm"), dict) else None
-    answer = replies[0] if replies else str(result)
-
-    return OrchestratorResult(answer=str(answer).strip(), model=model_label)
+    raise RuntimeError(f"Unknown GENAI_ORCHESTRATOR: {orch}")
