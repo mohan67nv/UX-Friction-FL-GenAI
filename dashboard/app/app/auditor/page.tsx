@@ -67,13 +67,29 @@ export default function AuditorPage() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, loading]);
 
+  const [authError, setAuthError] = useState<string | null>(null);
+
   useEffect(() => {
     (async () => {
       const res = await fetch('/api/dashboard/projects');
+      if (res.status === 401) {
+        setAuthError(lang === 'de' ? 'Bitte erneut einloggen.' : 'Please login again.');
+        return;
+      }
+      if (!res.ok) {
+        setAuthError(lang === 'de' ? 'Konnte Projekte nicht laden.' : 'Could not load projects.');
+        return;
+      }
       const list = (await res.json()) as Project[];
+      if (!Array.isArray(list)) {
+        setAuthError(lang === 'de' ? 'Unerwartete Antwort beim Laden der Projekte.' : 'Unexpected response loading projects.');
+        return;
+      }
       setProjects(list);
       if (!projectId && list.length) setProjectId(list[0].id);
-    })();
+    })().catch(() => {
+      setAuthError(lang === 'de' ? 'Netzwerkfehler beim Laden der Projekte.' : 'Network error loading projects.');
+    });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -94,10 +110,38 @@ export default function AuditorPage() {
   }, [lang]);
 
   const canAsk = useMemo(() => !!projectId && question.trim().length >= 3 && !loading, [projectId, question, loading]);
+  const hasProjects = projects.length > 0;
 
-  async function ask() {
-    if (!canAsk) return;
-    const q = question.trim();
+  const askDisabledReason = useMemo(() => {
+    if (loading) return lang === 'de' ? 'Denke…' : 'Thinking…';
+    if (!projectId) return lang === 'de' ? 'Bitte Projekt auswählen' : 'Select a project';
+    if (question.trim().length < 3) return lang === 'de' ? 'Bitte Frage eingeben' : 'Type a question';
+    return null;
+  }, [loading, projectId, question, lang]);
+
+  const quickPrompts = useMemo(
+    () =>
+      lang === 'de'
+        ? [
+            'Warum verlassen Nutzer den Checkout?',
+            'Zeig mir Safari-Probleme der letzten 7 Tage.',
+            'Was ist die Top-Empfehlung und warum?',
+            'Welche Reibung ist auf Mobile am schlimmsten?'
+          ]
+        : [
+            'Why are users abandoning checkout?',
+            'Show me Safari issues in the last 7 days.',
+            'What is the top recommendation and why?',
+            'Which friction is worst on mobile?'
+          ],
+    [lang]
+  );
+
+  async function ask(qOverride?: string) {
+    const raw = (qOverride ?? question).trim();
+    if (!projectId || raw.length < 3 || loading) return;
+
+    const q = raw;
     setQuestion('');
 
     setMessages((m) => [...m, { role: 'user', content: q }]);
@@ -183,7 +227,7 @@ export default function AuditorPage() {
     <>
       <div className="topbar">
         <div>
-          <div className="h1">PrivaLytics AI Auditor</div>
+          <div className="h1">ZeroBanner AI Auditor</div>
           <div className="sub">
             {lang === 'de'
               ? 'Konversationelle UX-Analyse aus aggregierten Daten (privacy-first).'
@@ -215,6 +259,61 @@ export default function AuditorPage() {
 
       <div className="grid">
         <div className="card" style={{ gridColumn: 'span 12', display: 'flex', flexDirection: 'column', gap: 12 }}>
+          {authError ? (
+            <div
+              style={{
+                border: '1px solid var(--border)',
+                borderRadius: 14,
+                padding: 12,
+                background: 'rgba(239, 68, 68, 0.10)'
+              }}
+            >
+              <div style={{ fontWeight: 800, marginBottom: 6 }}>{lang === 'de' ? 'Login erforderlich' : 'Login required'}</div>
+              <div className="sub">{authError}</div>
+              <div style={{ marginTop: 10, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <Link className="btn" href="/login">
+                  {lang === 'de' ? 'Zum Login' : 'Go to login'}
+                </Link>
+                <button
+                  className="btn btnSecondary"
+                  onClick={() => {
+                    window.location.reload();
+                  }}
+                >
+                  {lang === 'de' ? 'Neu laden' : 'Reload'}
+                </button>
+              </div>
+            </div>
+          ) : null}
+
+          {!authError && !hasProjects ? (
+            <div
+              style={{
+                border: '1px solid var(--border)',
+                borderRadius: 14,
+                padding: 12,
+                background: 'rgba(245, 158, 11, 0.12)'
+              }}
+            >
+              <div style={{ fontWeight: 800, marginBottom: 6 }}>
+                {lang === 'de' ? 'Kein Projekt gefunden' : 'No project found'}
+              </div>
+              <div className="sub">
+                {lang === 'de'
+                  ? 'Erstelle zuerst ein Projekt, damit der Auditor aggregierte Daten abrufen kann.'
+                  : 'Create a project first so the auditor can fetch aggregated data.'}
+              </div>
+              <div style={{ marginTop: 10, display: 'flex', gap: 10, flexWrap: 'wrap' }}>
+                <Link className="btn" href="/app/projects">
+                  {lang === 'de' ? 'Projekt erstellen' : 'Create project'}
+                </Link>
+                <Link className="btn btnSecondary" href="/setup">
+                  {lang === 'de' ? 'Setup ansehen' : 'View setup'}
+                </Link>
+              </div>
+            </div>
+          ) : null}
+
           <div style={{ display: 'flex', flexDirection: 'column', gap: 10, maxHeight: 520, overflow: 'auto' }}>
             {messages.map((m, idx) => (
               <div
@@ -275,19 +374,58 @@ export default function AuditorPage() {
             <div ref={bottomRef} />
           </div>
 
-          <div style={{ display: 'flex', gap: 10 }}>
-            <input
-              className="input"
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder={lang === 'de' ? 'Frage stellen…' : 'Ask a question…'}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') ask();
-              }}
-            />
-            <button className="btn" disabled={!canAsk} onClick={ask}>
-              {lang === 'de' ? 'Fragen' : 'Ask'}
-            </button>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+            <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
+              <textarea
+                className="input"
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder={
+                  lang === 'de'
+                    ? 'Frage stellen… (Enter = senden, Shift+Enter = neue Zeile)'
+                    : 'Ask a question… (Enter = send, Shift+Enter = newline)'
+                }
+                rows={2}
+                style={{ resize: 'vertical' }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    void ask();
+                  }
+                }}
+              />
+              <button
+                className="btn"
+                disabled={!canAsk}
+                onClick={() => void ask()}
+                title={askDisabledReason ?? (lang === 'de' ? 'Senden' : 'Send')}
+                style={{ padding: '10px 12px', borderRadius: 10, minWidth: 88 }}
+              >
+                {lang === 'de' ? 'Senden' : 'Send'}
+              </button>
+            </div>
+
+            {askDisabledReason ? (
+              <div className="sub">
+                {lang === 'de' ? 'Status: ' : 'Status: '}
+                {askDisabledReason}
+              </div>
+            ) : null}
+
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
+              {quickPrompts.map((p) => (
+                <button
+                  key={p}
+                  className="btn btnSecondary"
+                  style={{ padding: '6px 10px', borderRadius: 999, fontSize: 13 }}
+                  disabled={!projectId || loading}
+                  onClick={() => void ask(p)}
+                  title={lang === 'de' ? 'Klicken zum Senden' : 'Click to send'}
+                >
+                  {p}
+                </button>
+              ))}
+            </div>
           </div>
           <div className="sub">
             {lang === 'de'

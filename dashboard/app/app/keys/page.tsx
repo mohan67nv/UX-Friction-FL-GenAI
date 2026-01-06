@@ -117,9 +117,9 @@ export default function KeysPage() {
 
         <div className="card" style={{ gridColumn: 'span 12' }}>
           <h3>SDK snippet</h3>
-          <pre className="code">{`import PrivacyEdge from '@privacyedge/analytics';
+          <pre className="code">{`import ZeroBanner from '@privacyedge/analytics';
 
-const analytics = new PrivacyEdge({
+const analytics = new ZeroBanner({
   apiKey: 'YOUR_API_KEY',
   apiBaseUrl: '${process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000'}',
   privacyLevel: 'high'

@@ -11,13 +11,17 @@ export function Shell(props: { active: 'overview' | 'setup' | 'app'; children: R
   return (
     <div className="container">
       <aside className="sidebar">
-        <div className="brand" style={{ justifyContent: 'space-between' }}>
-          <div className="brand">
+        <div className="sidebarHeader">
+          <div className="brandTitle">
             <span style={{ width: 12, height: 12, borderRadius: 4, background: 'var(--brand)' }} />
-            PrivacyEdge
-            <span className="badge">Germany-first</span>
+            <span style={{ whiteSpace: 'nowrap' }}>ZeroBanner</span>
+            <span className="badge" style={{ whiteSpace: 'nowrap' }}>
+              Germany-first
+            </span>
           </div>
-          <LanguageSwitch initial={locale} />
+          <div className="sidebarHeaderRight">
+            <LanguageSwitch initial={locale} />
+          </div>
         </div>
         <div className="nav">
           <Link className={props.active === 'overview' ? 'active' : ''} href="/">

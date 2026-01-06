@@ -1,7 +1,10 @@
 import { cookies } from 'next/headers';
 
+import { internalApiBaseUrl } from './apiBase';
+
 export function apiBaseUrl(): string {
-  return process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+  // Used by Next.js route handlers and server components.
+  return internalApiBaseUrl();
 }
 
 export async function getAuthToken(): Promise<string | null> {

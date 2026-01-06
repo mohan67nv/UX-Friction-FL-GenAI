@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 export async function POST(request: Request) {
   const { name } = (await request.json().catch(() => ({}))) as { name?: string };
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
+  const baseUrl = process.env.INTERNAL_API_BASE_URL || process.env.NEXT_PUBLIC_API_BASE_URL || 'http://localhost:8000';
   const adminToken = process.env.NEXT_PUBLIC_ADMIN_BOOTSTRAP_TOKEN || '';
 
   if (!adminToken) {

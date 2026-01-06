@@ -33,7 +33,12 @@ export default function RecommendationsPage() {
   useEffect(() => {
     (async () => {
       const res = await fetch('/api/dashboard/projects');
+      if (res.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
       const list = (await res.json()) as Project[];
+      if (!Array.isArray(list)) return;
       setProjects(list);
       if (!projectId && list.length) setProjectId(list[0].id);
     })();
@@ -44,7 +49,15 @@ export default function RecommendationsPage() {
     if (!projectId) return;
     (async () => {
       const res = await fetch(`/api/dashboard/recommendations?project_id=${encodeURIComponent(projectId)}`);
+      if (!res.ok) {
+        setItems([]);
+        return;
+      }
       const list = (await res.json()) as Recommendation[];
+      if (!Array.isArray(list)) {
+        setItems([]);
+        return;
+      }
       setItems(list);
       setExpanded(list.find((x) => x.status === 'open')?.id ?? null);
     })();
@@ -100,8 +113,13 @@ export default function RecommendationsPage() {
                     </button>
                     <button
                       className="btn"
-                      onClick={() => {
-                        navigator.clipboard.writeText(r.fix_code);
+                      onClick={async () => {
+                        try {
+                          await navigator.clipboard.writeText(r.fix_code);
+                        } catch {
+                          // Fallback for insecure contexts/permissions
+                          window.prompt('Copy code:', r.fix_code);
+                        }
                       }}
                     >
                       {t('btnCopyCode')}

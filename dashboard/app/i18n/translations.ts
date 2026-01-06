@@ -40,7 +40,7 @@ export const translations: Record<Locale, Dict> = {
     overviewSeriesDebug: 'Series (debug)',
 
     projectsTitle: 'Projects',
-    projectsSubtitle: 'Websites/apps you track with PrivacyEdge.',
+    projectsSubtitle: 'Websites/apps you track with ZeroBanner.',
     projectsCreate: 'Create project',
     projectsYour: 'Your projects',
     projectsNoProjects: 'No projects yet.',
@@ -262,7 +262,7 @@ export const translations: Record<Locale, Dict> = {
     overviewSeriesDebug: 'Zeitreihe (Debug)',
 
     projectsTitle: 'Projekte',
-    projectsSubtitle: 'Websites/Apps, die Sie mit PrivacyEdge messen.',
+    projectsSubtitle: 'Websites/Apps, die Sie mit ZeroBanner messen.',
     projectsCreate: 'Projekt erstellen',
     projectsYour: 'Ihre Projekte',
     projectsNoProjects: 'Noch keine Projekte.',

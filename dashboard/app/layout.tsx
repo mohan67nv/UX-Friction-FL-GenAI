@@ -2,7 +2,7 @@ import './globals.css';
 import type { ReactNode } from 'react';
 
 export const metadata = {
-  title: 'PrivacyEdge Dashboard',
+  title: 'ZeroBanner Dashboard',
   description: 'Privacy-first UX analytics dashboard (Germany-first)'
 };
 
