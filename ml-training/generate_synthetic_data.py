@@ -128,9 +128,16 @@ class SyntheticUXGenerator:
 def main() -> None:
     gen = SyntheticUXGenerator()
     dataset = gen.generate_full_dataset(per_class=2000)
-    with open("ml-training/synthetic_ux_dataset.json", "w", encoding="utf-8") as f:
+    
+    # Support running from both project root and ml-training directory
+    import os
+    output_path = "synthetic_ux_dataset.json"
+    if not os.path.exists("generate_synthetic_data.py"):
+        output_path = "ml-training/synthetic_ux_dataset.json"
+    
+    with open(output_path, "w", encoding="utf-8") as f:
         json.dump(dataset, f)
-    print(f"Wrote {len(dataset)} samples to ml-training/synthetic_ux_dataset.json")
+    print(f"Wrote {len(dataset)} samples to {output_path}")
 
 
 if __name__ == "__main__":

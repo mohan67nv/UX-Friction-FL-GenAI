@@ -47,7 +47,9 @@ class TinyTransformerIntent(nn.Module):
 
 
 def main() -> None:
-    with open("ml-training/synthetic_ux_dataset.json", "r", encoding="utf-8") as f:
+    import os as _os
+    data_path = "synthetic_ux_dataset.json" if _os.path.exists("synthetic_ux_dataset.json") else "ml-training/synthetic_ux_dataset.json"
+    with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     X = torch.tensor([s["features"] for s in data], dtype=torch.float32)
@@ -86,11 +88,11 @@ def main() -> None:
 
         print(f"epoch {epoch+1:02d} loss={sum(losses)/len(losses):.4f} val_acc={acc:.4f}")
 
-    torch.save(model.state_dict(), "ml-training/intent_embedder.pt")
+    torch.save(model.state_dict(), "intent_embedder.pt")
 
     # Export ONNX
     dummy = torch.randn(1, 8)
-    onnx_path = os.getenv("INTENT_EMBEDDER_ONNX_PATH", "ml-training/intent_embedder.onnx")
+    onnx_path = os.getenv("INTENT_EMBEDDER_ONNX_PATH", "intent_embedder.onnx")
 
     model.eval()
     torch.onnx.export(

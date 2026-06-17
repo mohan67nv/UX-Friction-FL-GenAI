@@ -39,7 +39,9 @@ class FrictionDetectionModel(nn.Module):
 
 
 def main() -> None:
-    with open("ml-training/synthetic_ux_dataset.json", "r", encoding="utf-8") as f:
+    import os
+    data_path = "synthetic_ux_dataset.json" if os.path.exists("synthetic_ux_dataset.json") else "ml-training/synthetic_ux_dataset.json"
+    with open(data_path, "r", encoding="utf-8") as f:
         data = json.load(f)
 
     X = torch.tensor([s["features"] for s in data], dtype=torch.float32)
@@ -75,20 +77,22 @@ def main() -> None:
 
         print(f"epoch {epoch+1:02d} loss={sum(losses)/len(losses):.4f} val_acc={acc:.4f}")
 
-    torch.save(model.state_dict(), "ml-training/foundation_model.pt")
+    pt_path = "foundation_model.pt"
+    onnx_path = "foundation_model.onnx"
+    torch.save(model.state_dict(), pt_path)
 
     dummy = torch.randn(1, 8)
     torch.onnx.export(
         model,
         dummy,
-        "ml-training/foundation_model.onnx",
+        onnx_path,
         input_names=["input"],
         output_names=["logits"],
         dynamic_axes={"input": {0: "batch"}},
         opset_version=17,
     )
 
-    print("Saved ml-training/foundation_model.pt and ml-training/foundation_model.onnx")
+    print(f"Saved {pt_path} and {onnx_path}")
 
 
 if __name__ == "__main__":
