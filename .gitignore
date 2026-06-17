@@ -11,3 +11,18 @@ dist
 coverage
 .DS_Store
 dashboard/tsconfig.tsbuildinfo
+
+# ML artifacts (uncomment if you don't want to commit models)
+# *.onnx
+# *.pt
+# *.pth
+# ml-training/.venv
+
+# Internal documentation (keep README.md, SETUP.md public)
+FOR_JOB_APPLICATION.md
+EMPLOYER_REVIEW_ASSESSMENT.md
+FEDERATED_LEARNING_IMPLEMENTATION.md
+TRAINING_COMPLETE.md
+WHAT_IS_ONNX.md
+QUICK_SETUP.md
+README_old.md
