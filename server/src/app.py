@@ -1,4 +1,39 @@
-from __future__ import annotations
+"""
+PrivacyEdge - Federated Learning Server
+==========================================
+
+Core FastAPI backend implementing privacy-preserving UX analytics with Federated Learning.
+
+What this file does:
+-------------------
+- Implements server-side federated aggregation algorithm
+- Handles client registration and model update submissions
+- Applies differential privacy (gradient clipping + Laplace noise)
+- Manages multi-project isolation and authentication
+- Provides REST API for dashboard and client SDK
+- Coordinates distributed model training without collecting raw user data
+
+Key Components:
+--------------
+1. FederatedAggregator: Weighted averaging of client model updates
+2. Differential Privacy: clip_update() and add_dp_noise() functions
+3. REST API: /api/v1/federated/* endpoints
+4. Event tracking: UX friction detection and storage
+5. GenAI: RAG-powered UX insights and recommendations
+
+Privacy Guarantees:
+------------------
+- No PII collection (zero user data leaves browser)
+- Differential privacy with configurable epsilon (ε)
+- Ephemeral client IDs (rotate daily, no tracking)
+- GDPR Article 4(1) compliant by design
+
+Built by: Mohan Gowda
+Architecture: Privacy-first FL system with on-device ML
+License: MIT
+"""
+
+from __future__ annotations
 
 import os
 from datetime import datetime, timedelta, timezone

@@ -1,3 +1,52 @@
+"""
+PrivacyEdge GenAI UX Auditor
+============================
+
+AI-powered UX analysis using Retrieval-Augmented Generation (RAG).
+
+What this module does:
+----------------------
+- Answers natural language questions about UX friction ("Why are users leaving?")
+- Uses RAG to retrieve relevant behavioral context from vector database
+- Generates actionable insights using multi-LLM support (GPT-4, DeepSeek, Ollama)
+- Provides evidence-based recommendations with data citations
+- Integrates with federated learning metrics for privacy-safe analysis
+
+RAG Pipeline:
+------------
+1. Question → Embedding (sentence-transformers)
+2. Semantic search in Qdrant vector DB
+3. Retrieve top-k relevant UX patterns
+4. Construct context with aggregated metrics
+5. LLM generates answer with evidence
+6. Return structured response with recommendations
+
+Key Features:
+------------
+- Multi-layer RAG: Basic retrieval + orchestrated + haystack pipelines
+- Intent context: Uses intent embeddings for semantic similarity
+- Evidence tracking: All claims backed by data references
+- Caching: Deduplicated queries for performance
+- Privacy-safe: Only works with aggregated data, never raw user events
+
+Supported LLM Backends:
+----------------------
+- OpenAI: GPT-4, GPT-4o-mini (cloud, high quality)
+- DeepSeek: Cost-effective alternative
+- Ollama: Self-hosted, privacy-first (llama3, mistral)
+
+Example Questions:
+-----------------
+- "Why are users leaving the checkout page?"
+- "What's causing frustration on mobile?"
+- "Which form fields have the most errors?"
+- "How can I improve conversion rates?"
+
+Built by: Mohan Gowda
+Purpose: AI-powered UX insights with privacy guarantees
+License: MIT
+"""
+
 from __future__ import annotations
 
 import hashlib

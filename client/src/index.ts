@@ -1,3 +1,57 @@
+/**
+ * PrivacyEdge Client SDK - Federated Learning for Browser
+ * ========================================================
+ * 
+ * Privacy-first UX analytics SDK that trains ML models locally in the browser
+ * without collecting any personally identifiable information (PII).
+ * 
+ * What this SDK does:
+ * ------------------
+ * - Detects UX friction patterns (rage clicks, hesitation, confusion) in real-time
+ * - Runs ONNX models locally using WebAssembly (on-device inference)
+ * - Trains models using user behavior data that NEVER leaves the browser
+ * - Sends only aggregated model updates to server (differential privacy applied)
+ * - Zero cookies, zero localStorage, zero fingerprinting
+ * 
+ * Key Features:
+ * ------------
+ * 1. FederatedClient: Main class for client-side FL training
+ * 2. ONNX Runtime Web: Browser-based ML inference (foundation_model.onnx)
+ * 3. Event Tracking: Passive observation of clicks, scrolls, navigation
+ * 4. Intent Embeddings: 64-dimensional behavioral fingerprints
+ * 5. Differential Privacy: Gradient clipping before submission
+ * 
+ * Privacy Guarantees:
+ * ------------------
+ * - No PII collection: User data stays in browser memory (cleared on close)
+ * - Ephemeral client IDs: Rotate daily, no cross-session tracking
+ * - Local training: Model updates computed locally, not raw data
+ * - Configurable privacy levels: standard | high | maximum
+ * 
+ * Usage:
+ * ------
+ * ```typescript
+ * import { FederatedClient } from '@privacyedge/client';
+ * 
+ * const client = new FederatedClient({
+ *   serverUrl: 'https://api.privacyedge.com',
+ *   projectId: 'your-project-id'
+ * });
+ * 
+ * await client.initialize();
+ * // SDK now passively observes and learns, respecting user privacy
+ * ```
+ * 
+ * Architecture:
+ * ------------
+ * Browser (This SDK) → Detects UX events → Trains locally → Sends gradients →
+ * Server (FastAPI) → Aggregates updates → Improves global model
+ * 
+ * Built by: Mohan Gowda
+ * Implementation: TypeScript + ONNX Runtime Web + Federated Learning
+ * License: MIT
+ */
+
 export type RawEventType = 'click' | 'hover' | 'scroll' | 'navigation';
 
 export type DeviceType = 'desktop' | 'mobile' | 'tablet' | 'unknown';
