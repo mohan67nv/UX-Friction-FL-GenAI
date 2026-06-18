@@ -68,7 +68,7 @@ docker compose exec api python -m src.demo_harness
 
 ### Local Development
 
-See [SETUP.md](SETUP.md) for detailed local development instructions.
+See [docs/SETUP.md](docs/SETUP.md) for detailed local development instructions.
 
 ## Project Structure
 
