@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PrivacyEdge SDK Demo - Live Event Detection</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 2rem;
+      color: #333;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .header {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .subtitle {
+      color: #666;
+      font-size: 1.1rem;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      border-radius: 8px;
+      font-weight: 600;
+      margin-top: 1rem;
+    }
+
+    .status.loading {
+      background: #fff3cd;
+      color: #856404;
+    }
+
+    .status.ready {
+      background: #d4edda;
+      color: #155724;
+    }
+
+    .status.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: pulse 2s infinite;
+    }
+
+    .status.loading .status-dot {
+      background: #ffc107;
+    }
+
+    .status.ready .status-dot {
+      background: #28a745;
+    }
+
+    .status.error .status-dot {
+      background: #dc3545;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 24px 70px rgba(0,0,0,0.2);
+    }
+
+    .card h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #667eea;
+    }
+
+    .card p {
+      color: #666;
+      margin-bottom: 1rem;
+      line-height: 1.6;
+    }
+
+    .test-button {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      width: 100%;
+      margin-top: 0.5rem;
+    }
+
+    .test-button:hover {
+      transform: scale(1.02);
+      box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .test-button:active {
+      transform: scale(0.98);
+    }
+
+    .test-button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .event-log {
+      background: white;
+      border-radius: 16px;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.15);
+      max-height: 400px;
+      overflow-y: auto;
+    }
+
+    .event-log h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: #667eea;
+      position: sticky;
+      top: 0;
+      background: white;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f0f0f0;
+    }
+
+    .event-item {
+      padding: 0.75rem;
+      margin-bottom: 0.5rem;
+      border-radius: 8px;
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.9rem;
+    }
+
+    .event-item.rage {
+      border-left-color: #dc3545;
+      background: #fff5f5;
+    }
+
+    .event-item.hesitation {
+      border-left-color: #ffc107;
+      background: #fffdf5;
+    }
+
+    .event-item.confusion {
+      border-left-color: #fd7e14;
+      background: #fff8f5;
+    }
+
+    .event-time {
+      color: #999;
+      font-size: 0.8rem;
+    }
+
+    .instructions {
+      background: #e7f3ff;
+      border-left: 4px solid #0056b3;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1rem 0;
+    }
+
+    .instructions ul {
+      margin-left: 1.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .instructions li {
+      margin-bottom: 0.5rem;
+      line-height: 1.6;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .metric-card {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .metric-value {
+      font-size: 2rem;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .metric-label {
+      color: #666;
+      font-size: 0.9rem;
+      margin-top: 0.25rem;
+    }
+
+    .code-block {
+      background: #f8f9fa;
+      padding: 1rem;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Courier New', monospace;
+      font-size: 0.85rem;
+      overflow-x: auto;
+      margin: 1rem 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <div class="header">
+      <h1>🔒 PrivacyEdge SDK - Live Demo</h1>
+      <p class="subtitle">Privacy-first UX analytics using Federated Learning</p>
+      <div id="sdkStatus" class="status loading">
+        <span class="status-dot"></span>
+        <span>Loading SDK...</span>
+      </div>
+      
+      <div class="instructions">
+        <strong>📋 Instructions:</strong>
+        <ul>
+          <li>This page demonstrates real-time UX friction detection</li>
+          <li>Click the buttons below to generate different friction events</li>
+          <li>Events are detected locally in your browser (no data sent until you see "Event sent")</li>
+          <li>Check the dashboard at <a href="http://localhost:3001" target="_blank">http://localhost:3001</a> to see analytics</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Test Controls -->
+    <div class="grid">
+      <div class="card">
+        <h2>🔴 Rage Click Test</h2>
+        <p>Click this button rapidly 5+ times to trigger a rage click event. This simulates user frustration with unresponsive UI elements.</p>
+        <button class="test-button" id="rageBtn" onclick="testRageClick()">
+          Click Me Rapidly! (Rage Test)
+        </button>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+          Clicks: <strong id="rageCount">0</strong>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>⏱️ Hesitation Test</h2>
+        <p>Hover over this button for 2+ seconds without clicking. This simulates user hesitation and confusion.</p>
+        <button class="test-button" id="hesitationBtn">
+          Hover Without Clicking (Hesitation Test)
+        </button>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+          Hover time: <strong id="hoverTime">0s</strong>
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>🔀 Confusion Test</h2>
+        <p>Click different elements rapidly to simulate confused navigation behavior.</p>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.5rem;">
+          <button class="test-button" onclick="testConfusion(1)">Option 1</button>
+          <button class="test-button" onclick="testConfusion(2)">Option 2</button>
+          <button class="test-button" onclick="testConfusion(3)">Option 3</button>
+          <button class="test-button" onclick="testConfusion(4)">Option 4</button>
+        </div>
+        <p style="margin-top: 1rem; font-size: 0.9rem; color: #666;">
+          Rapid switches: <strong id="confusionCount">0</strong>
+        </p>
+      </div>
+    </div>
+
+    <!-- Metrics Dashboard -->
+    <div class="card">
+      <h2>📊 Session Metrics</h2>
+      <div class="metrics">
+        <div class="metric-card">
+          <div class="metric-value" id="totalEvents">0</div>
+          <div class="metric-label">Total Events</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="rageEvents">0</div>
+          <div class="metric-label">Rage Clicks</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="hesitationEvents">0</div>
+          <div class="metric-label">Hesitations</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-value" id="confusionEvents">0</div>
+          <div class="metric-label">Confusion Events</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Event Log -->
+    <div class="event-log">
+      <h2>📝 Live Event Log</h2>
+      <div id="eventList">
+        <p style="color: #999; text-align: center;">No events yet. Try the test buttons above!</p>
+      </div>
+    </div>
+
+    <!-- SDK Info -->
+    <div class="card">
+      <h2>🔧 Technical Details</h2>
+      <div class="code-block" id="sdkInfo">
+        <div>SDK Version: <strong id="sdkVersion">Loading...</strong></div>
+        <div>Project ID: <strong id="projectId">Loading...</strong></div>
+        <div>API Endpoint: <strong id="apiEndpoint">Loading...</strong></div>
+        <div>Privacy Level: <strong id="privacyLevel">high</strong></div>
+        <div>Local Training: <strong>Enabled ✅</strong></div>
+        <div>Differential Privacy: <strong>ε = 1.0 ✅</strong></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SDK Script - Will be replaced with actual SDK -->
+  <script>
+    // Global state
+    let eventCount = {
+      total: 0,
+      rage: 0,
+      hesitation: 0,
+      confusion: 0
+    };
+
+    let rageClickCount = 0;
+    let rageClickTimer = null;
+    let hoverStartTime = null;
+    let hoverInterval = null;
+    let confusionClicks = [];
+
+    // Update status
+    function updateStatus(state, message) {
+      const status = document.getElementById('sdkStatus');
+      status.className = `status ${state}`;
+      status.innerHTML = `<span class="status-dot"></span><span>${message}</span>`;
+    }
+
+    // Add event to log
+    function logEvent(type, message) {
+      const eventList = document.getElementById('eventList');
+      if (eventList.querySelector('p[style*="center"]')) {
+        eventList.innerHTML = '';
+      }
+
+      const eventItem = document.createElement('div');
+      eventItem.className = `event-item ${type}`;
+      const time = new Date().toLocaleTimeString();
+      eventItem.innerHTML = `
+        <div class="event-time">${time}</div>
+        <div>${message}</div>
+      `;
+      eventList.insertBefore(eventItem, eventList.firstChild);
+
+      // Update metrics
+      eventCount.total++;
+      if (type !== 'info') {
+        eventCount[type]++;
+      }
+      updateMetrics();
+    }
+
+    // Update metrics display
+    function updateMetrics() {
+      document.getElementById('totalEvents').textContent = eventCount.total;
+      document.getElementById('rageEvents').textContent = eventCount.rage;
+      document.getElementById('hesitationEvents').textContent = eventCount.hesitation;
+      document.getElementById('confusionEvents').textContent = eventCount.confusion;
+    }
+
+    // Rage click test
+    function testRageClick() {
+      rageClickCount++;
+      document.getElementById('rageCount').textContent = rageClickCount;
+
+      clearTimeout(rageClickTimer);
+      rageClickTimer = setTimeout(() => {
+        rageClickCount = 0;
+        document.getElementById('rageCount').textContent = '0';
+      }, 1000);
+
+      if (rageClickCount >= 5) {
+        logEvent('rage', `🔴 Rage click detected! (${rageClickCount} rapid clicks)`);
+        rageClickCount = 0;
+        document.getElementById('rageCount').textContent = '0';
+        
+        // Simulate sending to server
+        setTimeout(() => {
+          logEvent('info', '✅ Event sent to server (aggregated, no PII)');
+        }, 500);
+      }
+    }
+
+    // Hesitation test
+    const hesitationBtn = document.getElementById('hesitationBtn');
+    hesitationBtn.addEventListener('mouseenter', () => {
+      hoverStartTime = Date.now();
+      hoverInterval = setInterval(() => {
+        const elapsed = ((Date.now() - hoverStartTime) / 1000).toFixed(1);
+        document.getElementById('hoverTime').textContent = elapsed + 's';
+
+        if (elapsed >= 2.0 && elapsed < 2.1) {
+          logEvent('hesitation', `⏱️ Hesitation detected! (${elapsed}s hover without action)`);
+          setTimeout(() => {
+            logEvent('info', '✅ Event sent to server (aggregated, no PII)');
+          }, 500);
+        }
+      }, 100);
+    });
+
+    hesitationBtn.addEventListener('mouseleave', () => {
+      clearInterval(hoverInterval);
+      setTimeout(() => {
+        document.getElementById('hoverTime').textContent = '0s';
+      }, 2000);
+    });
+
+    // Confusion test
+    function testConfusion(option) {
+      const now = Date.now();
+      confusionClicks.push(now);
+      
+      // Keep only last 5 seconds of clicks
+      confusionClicks = confusionClicks.filter(t => now - t < 5000);
+
+      // Count rapid switches (different options in quick succession)
+      if (confusionClicks.length >= 4) {
+        const rapid = confusionClicks.filter(t => now - t < 2000).length;
+        if (rapid >= 4) {
+          document.getElementById('confusionCount').textContent = rapid;
+          logEvent('confusion', `🔀 Confusion detected! (${rapid} rapid UI switches)`);
+          confusionClicks = [];
+          setTimeout(() => {
+            logEvent('info', '✅ Event sent to server (aggregated, no PII)');
+            document.getElementById('confusionCount').textContent = '0';
+          }, 500);
+        }
+      }
+    }
+
+    // Initialize SDK status
+    updateStatus('loading', 'Initializing PrivacyEdge SDK...');
+
+    // Simulate SDK initialization
+    setTimeout(() => {
+      updateStatus('ready', 'SDK Ready - Monitoring UX patterns');
+      document.getElementById('sdkVersion').textContent = '0.1.0';
+      document.getElementById('projectId').textContent = 'demo-project-123';
+      document.getElementById('apiEndpoint').textContent = 'http://localhost:8001';
+      
+      logEvent('info', '🎉 PrivacyEdge SDK initialized successfully');
+      logEvent('info', '🔒 Privacy mode: HIGH (ε=1.0, local training enabled)');
+      logEvent('info', '📊 Ready to detect UX friction patterns');
+    }, 1000);
+  </script>
+
+  <!-- 
+  NOTE: To integrate the actual SDK, uncomment below and replace the simulation script above:
+  
+  <script src="http://localhost:8001/api/v1/sdk/client.js"></script>
+  <script>
+    PrivacyEdge.init({
+      apiKey: 'YOUR_API_KEY',
+      apiBaseUrl: 'http://localhost:8001',
+      privacyLevel: 'high'
+    }).then(() => {
+      updateStatus('ready', 'SDK Ready - Monitoring UX patterns');
+      logEvent('info', '🎉 PrivacyEdge SDK initialized successfully');
+    }).catch(err => {
+      updateStatus('error', `SDK Error: ${err.message}`);
+      logEvent('error', `❌ SDK initialization failed: ${err.message}`);
+    });
+  </script>
+  -->
+</body>
+</html>

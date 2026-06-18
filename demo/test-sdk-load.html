@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SDK Load Test</title>
+  <style>
+    body {
+      font-family: monospace;
+      padding: 20px;
+      background: #1e1e1e;
+      color: #d4d4d4;
+    }
+    .test-result {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+    }
+    .success { background: #0e4c2f; border-left: 4px solid #4ec9b0; }
+    .error { background: #4c1e1e; border-left: 4px solid #f48771; }
+    .info { background: #1e3a5f; border-left: 4px solid #4fc1ff; }
+    pre { background: #2d2d2d; padding: 10px; border-radius: 4px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>🧪 PrivacyEdge SDK Load Test</h1>
+  <div id="results"></div>
+
+  <script type="module">
+    const log = (type, message, data = null) => {
+      const div = document.createElement('div');
+      div.className = `test-result ${type}`;
+      div.innerHTML = `
+        <strong>${type.toUpperCase()}:</strong> ${message}
+        ${data ? `<pre>${JSON.stringify(data, null, 2)}</pre>` : ''}
+      `;
+      document.getElementById('results').appendChild(div);
+    };
+
+    // Test 1: Check if static file is accessible
+    log('info', '🔍 Test 1: Checking if SDK file is accessible...');
+    try {
+      const response = await fetch('http://localhost:8001/static/client.js');
+      if (response.ok) {
+        const size = response.headers.get('content-length');
+        log('success', `✅ SDK file accessible! Size: ${size} bytes`);
+      } else {
+        log('error', `❌ SDK file returned HTTP ${response.status}`);
+      }
+    } catch (err) {
+      log('error', `❌ Failed to fetch SDK file: ${err.message}`);
+    }
+
+    // Test 2: Import SDK module
+    log('info', '🔍 Test 2: Importing SDK as ES module...');
+    try {
+      const module = await import('http://localhost:8001/static/client.js');
+      log('success', '✅ SDK module imported successfully!', {
+        exports: Object.keys(module)
+      });
+
+      // Test 3: Instantiate PrivacyEdgeAnalytics
+      log('info', '🔍 Test 3: Creating PrivacyEdgeAnalytics instance...');
+      const { PrivacyEdgeAnalytics } = module;
+      
+      const analytics = new PrivacyEdgeAnalytics({
+        apiKey: 'pe_g75k4c51MvPTwb4nQFa6Jd-zbBcyMM6X4CJGzbYxkSU',
+        apiBaseUrl: 'http://localhost:8001',
+        privacyLevel: 'high',
+        strictNoPersistence: true,
+        genai: {
+          enableOnnxIntent: false
+        }
+      });
+      
+      log('success', '✅ PrivacyEdgeAnalytics instance created!', {
+        type: analytics.constructor.name
+      });
+
+      // Test 4: Initialize SDK
+      log('info', '🔍 Test 4: Initializing SDK...');
+      await analytics.init();
+      log('success', '✅ SDK initialized successfully!');
+
+      // Test 5: Track test event
+      log('info', '🔍 Test 5: Tracking test event...');
+      analytics.trackEvent('test_event', { positive: false });
+      log('success', '✅ Event tracked successfully!');
+
+      // Final summary
+      log('success', '🎉 ALL TESTS PASSED! SDK is working correctly.');
+      
+    } catch (err) {
+      log('error', `❌ SDK module import/init failed: ${err.message}`, {
+        stack: err.stack
+      });
+    }
+  </script>
+</body>
+</html>

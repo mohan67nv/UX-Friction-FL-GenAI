@@ -33,7 +33,7 @@ Architecture: Privacy-first FL system with on-device ML
 License: MIT
 """
 
-from __future__ annotations
+from __future__ import annotations
 
 import os
 from datetime import datetime, timedelta, timezone
@@ -42,6 +42,7 @@ from typing import Any, Optional
 import numpy as np
 from fastapi import BackgroundTasks, Depends, FastAPI, Header, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 from redis import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -256,6 +257,13 @@ aggregator = FederatedAggregator()
 cfg = load_config()
 
 app = FastAPI(title="ZeroBanner Analytics API", version="0.2.0")
+
+# Serve static files (SDK, models) for browser-based ML
+# SDK available at: http://localhost:8001/static/client.js
+# Models available at: http://localhost:8001/static/models/*.onnx
+static_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "static")
+if os.path.exists(static_dir):
+    app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 # Global sync endpoints (used by SaaS global server)
 from .routes_global_sync import router as global_sync_router

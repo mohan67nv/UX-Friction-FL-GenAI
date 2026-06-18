@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: privacyedge
       POSTGRES_DB: privacyedge
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -18,7 +18,7 @@ services:
   redis:
     image: redis:7
     ports:
-      - "6379:6379"
+      - "6380:6379"
 
   qdrant:
     image: qdrant/qdrant:v1.11.5
@@ -61,7 +61,7 @@ services:
       # Demo UX: auto-create org + project on signup so the dashboard works immediately.
       AUTO_BOOTSTRAP_ON_REGISTER: ${AUTO_BOOTSTRAP_ON_REGISTER:-1}
     ports:
-      - "8000:8000"
+      - "8001:8000"
     restart: unless-stopped
     depends_on:
       postgres:
@@ -77,12 +77,12 @@ services:
       dockerfile: dashboard/Dockerfile
     environment:
       # Used by browser-side code/examples
-      NEXT_PUBLIC_API_BASE_URL: http://localhost:8000
+      NEXT_PUBLIC_API_BASE_URL: http://localhost:8001
       # Used by Next.js route handlers (inside docker network)
       INTERNAL_API_BASE_URL: http://api:8000
       NEXT_PUBLIC_API_KEY: dev-key-change-me
     ports:
-      - "3000:3000"
+      - "3001:3000"
     depends_on:
       - api
 
