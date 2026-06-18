@@ -42,8 +42,8 @@ Example Questions:
 - "Which form fields have the most errors?"
 - "How can I improve conversion rates?"
 
-Built by: Mohan Gowda
-Purpose: AI-powered UX insights with privacy guarantees
+Built by: Mohana Nyamanahalli Venkatesha
+Purpose: UX insights with privacy guarantees
 License: MIT
 """
 

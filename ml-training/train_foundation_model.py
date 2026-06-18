@@ -41,7 +41,7 @@ This model is trained on synthetic data (no real users). In production,
 federated learning allows the model to improve using real behavioral patterns
 while keeping all user data on-device.
 
-Built by: Mohan Gowda
+Built by: Mohana Nyamanahalli Venkatesha
 Purpose: Privacy-preserving UX friction detection
 License: MIT
 """

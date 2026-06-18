@@ -54,7 +54,7 @@ ONNX Export:
 - Int8 quantization: Further reduces size/latency
 - Usage: Loaded by client SDK for semantic search
 
-Built by: Mohan Gowda
+Built by: Mohana Nyamanahalli Venkatesha
 Purpose: Privacy-preserving behavioral embeddings
 License: MIT
 """

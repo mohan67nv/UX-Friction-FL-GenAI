@@ -27,3 +27,7 @@ docs/TRAINING_COMPLETE.md
 docs/WHAT_IS_ONNX.md
 docs/QUICK_SETUP.md
 docs/README_old.md
+
+# Setup scripts (internal workflow, not for public view)
+setup_models.sh
+setup_python_env.sh

@@ -47,7 +47,7 @@
  * Browser (This SDK) → Detects UX events → Trains locally → Sends gradients →
  * Server (FastAPI) → Aggregates updates → Improves global model
  * 
- * Built by: Mohan Gowda
+ * Built by: Mohana Nyamanahalli Venkatesha
  * Implementation: TypeScript + ONNX Runtime Web + Federated Learning
  * License: MIT
  */

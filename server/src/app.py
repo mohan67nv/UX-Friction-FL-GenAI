@@ -28,7 +28,7 @@ Privacy Guarantees:
 - Ephemeral client IDs (rotate daily, no tracking)
 - GDPR Article 4(1) compliant by design
 
-Built by: Mohan Gowda
+Built by: Mohana Nyamanahalli Venkatesha
 Architecture: Privacy-first FL system with on-device ML
 License: MIT
 """

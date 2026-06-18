@@ -2,7 +2,7 @@
 
 ## Project Creator & Lead Developer
 
-**Mohan Gowda** ([@mohan67nv](https://github.com/mohan67nv))
+**Mohana Nyamanahalli Venkatesha** ([@mohan67nv](https://github.com/mohan67nv))
 - Architecture & System Design
 - Federated Learning Implementation
 - Differential Privacy Engineering
@@ -17,7 +17,7 @@
 
 ## What Was Built
 
-This is a **complete, from-scratch implementation** of a privacy-preserving UX analytics platform using Federated Learning. Every component was designed and coded by Mohan Gowda:
+This is a **complete, from-scratch implementation** of a privacy-preserving UX analytics platform using Federated Learning. Every component was designed and coded by Mohana Nyamanahalli Venkatesha:
 
 ### Core Components
 - **Federated Learning System**: Client-side training + server-side aggregation
@@ -45,7 +45,7 @@ This is a **complete, from-scratch implementation** of a privacy-preserving UX a
 
 ## Research & Inspiration
 
-While all code was written by Mohan Gowda, the project builds on established research:
+While all code was written by Mohana Nyamanahalli Venkatesha, the project builds on established research:
 
 - **Federated Learning**: Concepts from McMahan et al. (Google, 2016)
 - **Differential Privacy**: Theory from Dwork & Roth
@@ -65,7 +65,7 @@ MIT License - See [LICENSE](LICENSE) file
 
 ---
 
-**Note**: This project represents original research and engineering work in privacy-preserving machine learning. All architectural decisions, code implementation, and system design were done by Mohan Gowda without using code generation tools or copying existing FL implementations.
+**Note**: This project represents original research and engineering work in privacy-preserving machine learning. All architectural decisions, code implementation, and system design were done by Mohana Nyamanahalli Venkatesha without using code generation tools or copying existing FL implementations.
 
 **GitHub**: https://github.com/mohan67nv/UX-Friction-FL-GenAI
 
