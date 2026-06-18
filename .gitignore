@@ -27,6 +27,8 @@ docs/TRAINING_COMPLETE.md
 docs/WHAT_IS_ONNX.md
 docs/QUICK_SETUP.md
 docs/README_old.md
+docs/PROJECT_REALITY_CHECK.md
+docs/FINAL_SUMMARY.md
 
 # Setup scripts (internal workflow, not for public view)
 setup_models.sh
