@@ -19,13 +19,15 @@ dashboard/tsconfig.tsbuildinfo
 # *.pth
 # ml-training/.venv
 
-# Internal documentation (keep README.md and docs/ folder public)
-FOR_JOB_APPLICATION.md
-EMPLOYER_REVIEW_ASSESSMENT.md
-FEDERATED_LEARNING_IMPLEMENTATION.md
-TRAINING_COMPLETE.md
-WHAT_IS_ONNX.md
-QUICK_SETUP.md
-README_old.md
+# Internal documentation - now in docs/ folder but hidden from GitHub
+docs/FOR_JOB_APPLICATION.md
+docs/EMPLOYER_REVIEW_ASSESSMENT.md
+docs/FEDERATED_LEARNING_IMPLEMENTATION.md
+docs/TRAINING_COMPLETE.md
+docs/WHAT_IS_ONNX.md
+docs/QUICK_SETUP.md
+docs/README_old.md
+
+# Setup scripts (internal use only)
 setup_python_env.sh
 setup_models.sh
