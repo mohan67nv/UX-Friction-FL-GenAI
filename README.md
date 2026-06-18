@@ -216,7 +216,10 @@ MIT License - see [LICENSE](LICENSE) file for details
 
 ## Documentation
 
-- **[SETUP.md](SETUP.md)**: Detailed setup and development guide
+- **[Setup Guide](docs/SETUP.md)**: Detailed setup and development guide
+- **[Python Environment](docs/VENV_SETUP.md)**: Virtual environment setup
+- **[Project Overview](docs/PROJECT_REALITY_CHECK.md)**: What's built and how to use it
+- **[Summary](docs/FINAL_SUMMARY.md)**: Quick reference guide
 - **API Docs**: http://localhost:8000/docs (when running)
 
 ## Contributing
@@ -245,4 +248,4 @@ For security issues, please email: security@example.com
 
 ---
 
-**Status**: Production-ready MVP with core FL implementation complete. See [SETUP.md](SETUP.md) for deployment guide.
+**Status**: Research MVP with core FL implementation complete. See [docs/](docs/) for detailed documentation.

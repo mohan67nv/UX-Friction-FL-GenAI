@@ -5,6 +5,7 @@ node_modules
 __pycache__
 *.pyc
 .venv
+uxfriction/
 .next
 out
 dist
@@ -18,7 +19,7 @@ dashboard/tsconfig.tsbuildinfo
 # *.pth
 # ml-training/.venv
 
-# Internal documentation (keep README.md, SETUP.md public)
+# Internal documentation (keep README.md and docs/ folder public)
 FOR_JOB_APPLICATION.md
 EMPLOYER_REVIEW_ASSESSMENT.md
 FEDERATED_LEARNING_IMPLEMENTATION.md
@@ -26,3 +27,5 @@ TRAINING_COMPLETE.md
 WHAT_IS_ONNX.md
 QUICK_SETUP.md
 README_old.md
+setup_python_env.sh
+setup_models.sh
