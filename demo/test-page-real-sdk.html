@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrivacyEdge Demo - Real SDK Integration</title>
+  <title>ZeroBanner Demo - Real SDK Integration</title>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     
@@ -255,7 +255,7 @@
 <body>
   <div class="container">
     <div class="header">
-      <h1>🛡️ PrivacyEdge Demo</h1>
+      <h1>🛡️ ZeroBanner Demo</h1>
       <p>Federated Learning UX Analytics - Real SDK Integration</p>
     </div>
 
@@ -341,10 +341,10 @@
     </div>
   </div>
 
-  <!-- Load PrivacyEdge SDK -->
+  <!-- Load ZeroBanner SDK -->
   <script type="module">
-    // Import SDK from static server
-    import { PrivacyEdgeAnalytics } from 'http://localhost:8001/static/client.js';
+    import { ZeroBannerAnalytics } from './dist/index.js';
+
 
     // Configuration
     const API_KEY = 'pe_g75k4c51MvPTwb4nQFa6Jd-zbBcyMM6X4CJGzbYxkSU';
@@ -400,13 +400,13 @@
     }
 
     // Initialize SDK
-    updateStatus('loading', 'Initializing PrivacyEdge SDK...');
+    updateStatus('loading', 'Initializing ZeroBanner SDK...');
     logEvent('info', '🚀 Starting SDK initialization...');
 
     let analytics;
 
     try {
-      analytics = new PrivacyEdgeAnalytics({
+      analytics = new ZeroBannerAnalytics({
         apiKey: API_KEY,
         apiBaseUrl: API_BASE_URL,
         privacyLevel: 'high',
@@ -424,7 +424,7 @@
       document.getElementById('apiEndpoint').textContent = API_BASE_URL;
       document.getElementById('privacyLevel').textContent = 'HIGH (ε=1.0)';
       
-      logEvent('info', '🎉 PrivacyEdge SDK initialized successfully');
+      logEvent('info', '🎉 ZeroBanner SDK initialized successfully');
       logEvent('info', '🔒 Privacy mode: HIGH (ε=1.0, local training enabled)');
       logEvent('info', '📊 Ready to detect UX friction patterns');
       logEvent('info', '✨ All ML inference happens locally in your browser');

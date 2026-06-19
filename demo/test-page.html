@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PrivacyEdge SDK Demo - Live Event Detection</title>
+  <title>ZeroBanner SDK Demo - Live Event Detection</title>
   <style>
     * {
       margin: 0;
@@ -264,7 +264,7 @@
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <h1>🔒 PrivacyEdge SDK - Live Demo</h1>
+      <h1>🔒 ZeroBanner SDK - Live Demo</h1>
       <p class="subtitle">Privacy-first UX analytics using Federated Learning</p>
       <div id="sdkStatus" class="status loading">
         <span class="status-dot"></span>
@@ -492,7 +492,7 @@
     }
 
     // Initialize SDK status
-    updateStatus('loading', 'Initializing PrivacyEdge SDK...');
+    updateStatus('loading', 'Initializing ZeroBanner SDK...');
 
     // Simulate SDK initialization
     setTimeout(() => {
@@ -501,7 +501,7 @@
       document.getElementById('projectId').textContent = 'demo-project-123';
       document.getElementById('apiEndpoint').textContent = 'http://localhost:8001';
       
-      logEvent('info', '🎉 PrivacyEdge SDK initialized successfully');
+      logEvent('info', '🎉 ZeroBanner SDK initialized successfully');
       logEvent('info', '🔒 Privacy mode: HIGH (ε=1.0, local training enabled)');
       logEvent('info', '📊 Ready to detect UX friction patterns');
     }, 1000);
@@ -512,13 +512,13 @@
   
   <script src="http://localhost:8001/api/v1/sdk/client.js"></script>
   <script>
-    PrivacyEdge.init({
+    ZeroBanner.init({
       apiKey: 'YOUR_API_KEY',
       apiBaseUrl: 'http://localhost:8001',
       privacyLevel: 'high'
     }).then(() => {
       updateStatus('ready', 'SDK Ready - Monitoring UX patterns');
-      logEvent('info', '🎉 PrivacyEdge SDK initialized successfully');
+      logEvent('info', '🎉 ZeroBanner SDK initialized successfully');
     }).catch(err => {
       updateStatus('error', `SDK Error: ${err.message}`);
       logEvent('error', `❌ SDK initialization failed: ${err.message}`);

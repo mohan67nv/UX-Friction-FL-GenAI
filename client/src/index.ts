@@ -1,5 +1,5 @@
 /**
- * PrivacyEdge Client SDK - Federated Learning for Browser
+ * ZeroBanner Client SDK - Federated Learning for Browser
  * ========================================================
  * 
  * Privacy-first UX analytics SDK that trains ML models locally in the browser
@@ -31,10 +31,10 @@
  * Usage:
  * ------
  * ```typescript
- * import { FederatedClient } from '@privacyedge/client';
+ * import { FederatedClient } from '@zerobanner/client';
  * 
  * const client = new FederatedClient({
- *   serverUrl: 'https://api.privacyedge.com',
+ *   serverUrl: 'https://api.zerobanner.com',
  *   projectId: 'your-project-id'
  * });
  * 
@@ -66,7 +66,7 @@ export interface IntentVector {
   timestamp: number;
 }
 
-export interface PrivacyEdgeConfig {
+export interface ZeroBannerConfig {
   apiKey: string;
   apiBaseUrl: string;
   privacyLevel?: 'standard' | 'high' | 'maximum';
@@ -80,16 +80,16 @@ export interface PrivacyEdgeConfig {
   };
 }
 
-type ResolvedConfig = Omit<Required<PrivacyEdgeConfig>, 'genai'> & {
-  genai: NonNullable<PrivacyEdgeConfig['genai']>;
+type ResolvedConfig = Omit<Required<ZeroBannerConfig>, 'genai'> & {
+  genai: NonNullable<ZeroBannerConfig['genai']>;
 };
 
-export class PrivacyEdgeAnalytics {
+export class ZeroBannerAnalytics {
   private readonly config: ResolvedConfig;
   private readonly ghost: GhostWitness;
   private readonly federated: FederatedClient;
 
-  constructor(cfg: PrivacyEdgeConfig) {
+  constructor(cfg: ZeroBannerConfig) {
     const epsilonMap = { standard: 2.0, high: 1.0, maximum: 0.5 } as const;
     this.config = {
       privacyLevel: cfg.privacyLevel ?? 'high',
@@ -197,17 +197,17 @@ class GhostWitness {
         ...args: Parameters<History['pushState']>
       ): void {
         hist.__pePush!.apply(this, args);
-        window.dispatchEvent(new Event('privacyedge:navigation'));
+        window.dispatchEvent(new Event('zerobanner:navigation'));
       };
       hist.replaceState = function (
         this: History,
         ...args: Parameters<History['replaceState']>
       ): void {
         hist.__peReplace!.apply(this, args);
-        window.dispatchEvent(new Event('privacyedge:navigation'));
+        window.dispatchEvent(new Event('zerobanner:navigation'));
       };
     }
-    window.addEventListener('privacyedge:navigation', () => this.recordNavigation(), { passive: true });
+    window.addEventListener('zerobanner:navigation', () => this.recordNavigation(), { passive: true });
 
     document.addEventListener('click', this.clickHandler, { passive: true });
 
@@ -259,7 +259,7 @@ class GhostWitness {
     const elapsed = performance.now() - start;
     if (elapsed > this.ttlMs) {
       // eslint-disable-next-line no-console
-      console.warn(`[PrivacyEdge] GhostWitness TTL exceeded: ${elapsed.toFixed(1)}ms`);
+      console.warn(`[ZeroBanner] GhostWitness TTL exceeded: ${elapsed.toFixed(1)}ms`);
     }
   }
 
@@ -430,7 +430,7 @@ type FederatedClientOpts = {
   apiBaseUrl: string;
   apiKey: string;
   epsilon: number;
-  genai?: PrivacyEdgeConfig['genai'];
+  genai?: ZeroBannerConfig['genai'];
 };
 
 type Tensor = { shape: number[]; data: number[] };

@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 
-import { PrivacyEdgeAnalytics } from './index';
+import { ZeroBannerAnalytics } from './index';
 
 // jsdom provides document/window
 
-describe('PrivacyEdgeAnalytics SDK (MVP)', () => {
+describe('ZeroBannerAnalytics SDK (MVP)', () => {
   it('constructs with strictNoPersistence default', () => {
-    const a = new PrivacyEdgeAnalytics({
+    const a = new ZeroBannerAnalytics({
       apiKey: 'x'.repeat(20),
       apiBaseUrl: 'http://localhost:8000'
     });

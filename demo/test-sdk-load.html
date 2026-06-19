@@ -23,7 +23,7 @@
   </style>
 </head>
 <body>
-  <h1>🧪 PrivacyEdge SDK Load Test</h1>
+  <h1>🧪 ZeroBanner SDK Load Test</h1>
   <div id="results"></div>
 
   <script type="module">
@@ -59,11 +59,11 @@
         exports: Object.keys(module)
       });
 
-      // Test 3: Instantiate PrivacyEdgeAnalytics
-      log('info', '🔍 Test 3: Creating PrivacyEdgeAnalytics instance...');
-      const { PrivacyEdgeAnalytics } = module;
+      // Test 3: Instantiate ZeroBannerAnalytics
+      log('info', '🔍 Test 3: Creating ZeroBannerAnalytics instance...');
+      const { ZeroBannerAnalytics } = module;
       
-      const analytics = new PrivacyEdgeAnalytics({
+      const analytics = new ZeroBannerAnalytics({
         apiKey: 'pe_g75k4c51MvPTwb4nQFa6Jd-zbBcyMM6X4CJGzbYxkSU',
         apiBaseUrl: 'http://localhost:8001',
         privacyLevel: 'high',
@@ -73,7 +73,7 @@
         }
       });
       
-      log('success', '✅ PrivacyEdgeAnalytics instance created!', {
+      log('success', '✅ ZeroBannerAnalytics instance created!', {
         type: analytics.constructor.name
       });
 

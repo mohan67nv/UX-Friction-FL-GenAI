@@ -1,6 +1,6 @@
 # Demo Test Page
 
-Beautiful, interactive test page for demonstrating PrivacyEdge SDK's real-time UX friction detection.
+Beautiful, interactive test page for demonstrating ZeroBanner SDK's real-time UX friction detection.
 
 ## Quick Start
 
@@ -230,7 +230,7 @@ To test on your own website:
 <!-- Add to <head> of your website -->
 <script src="http://localhost:8001/api/v1/sdk/client.js"></script>
 <script>
-  PrivacyEdge.init({
+  ZeroBanner.init({
     apiKey: 'pe_your_api_key_here',
     apiBaseUrl: 'http://localhost:8001',
     privacyLevel: 'high',
@@ -253,7 +253,7 @@ To test on your own website:
 
 When deploying to production:
 
-1. **Use HTTPS**: `apiBaseUrl: 'https://api.privacyedge.com'`
+1. **Use HTTPS**: `apiBaseUrl: 'https://api.zerobanner.com'`
 2. **CDN for SDK**: Host on CloudFront/Cloudflare
 3. **Real API Keys**: Rotate regularly
 4. **Monitor Performance**: SDK should load < 50ms
