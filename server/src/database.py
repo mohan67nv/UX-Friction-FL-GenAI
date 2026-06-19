@@ -19,7 +19,7 @@ def _normalize_async_db_url(url: str) -> str:
     return url
 
 
-DATABASE_URL = _normalize_async_db_url(os.getenv("DATABASE_URL", "sqlite:///./privacyedge.db"))
+DATABASE_URL = _normalize_async_db_url(os.getenv("DATABASE_URL", "sqlite:///./zerobanner.db"))
 
 
 def _engine_kwargs() -> dict:

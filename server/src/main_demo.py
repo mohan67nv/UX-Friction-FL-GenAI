@@ -22,6 +22,6 @@ async def _seed():
     async with AsyncSessionLocal() as db:
         creds = await seed_demo(db)
         await db.commit()
-        print("\n=== PrivacyEdge DEMO seeded ===")
+        print("\n=== ZeroBanner DEMO seeded ===")
         print("Login:", creds["email"], creds["password"])
         print("==============================\n")

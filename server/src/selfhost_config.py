@@ -37,11 +37,11 @@ class SelfHostConfig:
 
 
 def load_config(path: str | None = None) -> SelfHostConfig:
-    path = path or os.getenv("PRIVACYEDGE_CONFIG", "privacyedge-setup.yml")
+    path = path or os.getenv("ZEROBANNER_CONFIG", "zerobanner-setup.yml")
     if not os.path.exists(path):
         # Default: SaaS-like behavior (no global sync from this instance)
         return SelfHostConfig(
-            deployment_name="PrivacyEdge",
+            deployment_name="ZeroBanner",
             mode="saas",
             global_sync=GlobalSync(enabled=False, frequency="weekly", endpoint="", api_key="", deployment_id=""),
             privacy=Privacy(dp_enabled=True, epsilon=1.0),
@@ -60,7 +60,7 @@ def load_config(path: str | None = None) -> SelfHostConfig:
     em = data.get("emergency_controls") or {}
 
     return SelfHostConfig(
-        deployment_name=str(data.get("deployment_name", "PrivacyEdge Self-Hosted")),
+        deployment_name=str(data.get("deployment_name", "ZeroBanner Self-Hosted")),
         mode=str(data.get("mode", "self_hosted_isolated")),
         global_sync=GlobalSync(
             enabled=bool(gs.get("enabled", False)),

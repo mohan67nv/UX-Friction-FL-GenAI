@@ -1,4 +1,4 @@
-PrivacyEdge Analytics - DPIA Template (Germany-first)
+ZeroBanner Analytics - DPIA Template (Germany-first)
 
 1. Processing overview
 - Purpose: UX improvement / friction detection

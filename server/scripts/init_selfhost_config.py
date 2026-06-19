@@ -1,7 +1,7 @@
-"""Initialize or patch privacyedge-setup.yml with a stable deployment_id.
+"""Initialize or patch zerobanner-setup.yml with a stable deployment_id.
 
 Usage:
-  python server/scripts/init_selfhost_config.py privacyedge-setup.yml
+  python server/scripts/init_selfhost_config.py zerobanner-setup.yml
 
 This is for self-hosted deployments so global sync can distinguish instances.
 """
@@ -16,7 +16,7 @@ import yaml
 
 
 def main() -> None:
-    path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("privacyedge-setup.yml")
+    path = Path(sys.argv[1]) if len(sys.argv) > 1 else Path("zerobanner-setup.yml")
     if not path.exists():
         raise SystemExit(f"Config not found: {path}")
 

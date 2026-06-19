@@ -89,7 +89,7 @@ async def main() -> None:
         # Resolve the seeded org/project (keep robust across renames)
         org = (
             await db.execute(
-                select(Organization).where(Organization.slug.in_(["zerobanner-demo-gmbh", "privacyedge-demo-gmbh"]))
+                select(Organization).where(Organization.slug.in_(["zerobanner-demo-gmbh", "zerobanner-demo-gmbh"]))
             )
         ).scalars().first()
         if not org:

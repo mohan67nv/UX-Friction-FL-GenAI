@@ -1,8 +1,8 @@
-PrivacyEdge Analytics - DPA / AVV Template (Germany-first)
+ZeroBanner Analytics - DPA / AVV Template (Germany-first)
 
 1. Parties
 - Controller: Customer
-- Processor: PrivacyEdge Analytics
+- Processor: ZeroBanner Analytics
 
 2. Subject matter
 - Provision of privacy-first UX analytics

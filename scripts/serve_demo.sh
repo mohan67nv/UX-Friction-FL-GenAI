@@ -2,7 +2,7 @@
 # Serve demo files for local testing
 # Usage: ./scripts/serve_demo.sh
 
-DEMO_DIR="/home/mnvgowda/MNVProjects/UX-Friction-FL-GenAI/demo"
+DEMO_DIR="/home/mnvgowda/MNVProjects/ZeroBanner-FL-GenAI/demo"
 
 echo "🌐 Starting HTTP server for demo files..."
 echo "📂 Serving from: $DEMO_DIR"

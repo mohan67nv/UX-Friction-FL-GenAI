@@ -7,7 +7,7 @@ def test_demo_seed_provides_recommendations():
     # Demo app seeds on startup; run basic flow
     with TestClient(app) as c:
         # login
-        r = c.post('/auth/login', json={'email': 'demo@privacyedge.local', 'password': 'DemoPassword123!'})
+        r = c.post('/auth/login', json={'email': 'demo@zerobanner.local', 'password': 'DemoPassword123!'})
         assert r.status_code == 200
         token = r.json()['access_token']
 

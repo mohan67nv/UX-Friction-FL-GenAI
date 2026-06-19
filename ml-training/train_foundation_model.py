@@ -1,5 +1,5 @@
 """
-PrivacyEdge Foundation Model Training Script
+ZeroBanner Foundation Model Training Script
 ============================================
 
 Trains a neural network for UX friction detection and exports to ONNX format.

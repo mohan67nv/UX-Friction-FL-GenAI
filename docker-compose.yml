@@ -2,15 +2,15 @@ services:
   postgres:
     image: postgres:16
     environment:
-      POSTGRES_USER: privacyedge
-      POSTGRES_PASSWORD: privacyedge
-      POSTGRES_DB: privacyedge
+      POSTGRES_USER: zerobanner
+      POSTGRES_PASSWORD: zerobanner
+      POSTGRES_DB: zerobanner
     ports:
       - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U privacyedge -d privacyedge"]
+      test: ["CMD-SHELL", "pg_isready -U zerobanner -d zerobanner"]
       interval: 2s
       timeout: 5s
       retries: 30
@@ -32,10 +32,15 @@ services:
       context: ./server
     environment:
       # Namespace these vars to avoid accidental collision with other projects on the host
-      DATABASE_URL: ${PRIVACYEDGE_DATABASE_URL:-postgresql://privacyedge:privacyedge@postgres:5432/privacyedge}
-      REDIS_URL: ${PRIVACYEDGE_REDIS_URL:-redis://redis:6379/0}
-      API_KEY_SALT: ${PRIVACYEDGE_API_KEY_SALT:-change-me}
-      CORS_ORIGINS: ${PRIVACYEDGE_CORS_ORIGINS:-http://localhost:3000}
+      DATABASE_URL: ${ZEROBANNER_DATABASE_URL:-postgresql://zerobanner:zerobanner@postgres:5432/zerobanner}
+      REDIS_URL: ${ZEROBANNER_REDIS_URL:-redis://redis:6379/0}
+      API_KEY_SALT: ${ZEROBANNER_API_KEY_SALT:-change-me}
+      CORS_ORIGINS: ${ZEROBANNER_CORS_ORIGINS:-http://localhost:3000}
+      
+      # Supabase credentials (backend)
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      SUPABASE_JWT_SECRET: ${SUPABASE_JWT_SECRET}
 
       # GenAI / semantic retrieval
       QDRANT_URL: ${QDRANT_URL:-http://qdrant:6333}
@@ -75,12 +80,20 @@ services:
     build:
       context: .
       dockerfile: dashboard/Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
+        NEXT_PUBLIC_API_BASE_URL: http://localhost:8001
     environment:
       # Used by browser-side code/examples
       NEXT_PUBLIC_API_BASE_URL: http://localhost:8001
       # Used by Next.js route handlers (inside docker network)
       INTERNAL_API_BASE_URL: http://api:8000
       NEXT_PUBLIC_API_KEY: dev-key-change-me
+      
+      # Supabase credentials (browser-accessible)
+      NEXT_PUBLIC_SUPABASE_URL: ${SUPABASE_URL}
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: ${NEXT_PUBLIC_SUPABASE_ANON_KEY}
     ports:
       - "3001:3000"
     depends_on:

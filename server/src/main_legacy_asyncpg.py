@@ -27,7 +27,7 @@ def _env(name: str, default: str | None = None) -> str:
     return v
 
 
-DATABASE_URL = _env("DATABASE_URL", "postgresql://privacyedge:privacyedge@localhost:5432/privacyedge")
+DATABASE_URL = _env("DATABASE_URL", "postgresql://zerobanner:zerobanner@localhost:5432/zerobanner")
 REDIS_URL = _env("REDIS_URL", "redis://localhost:6379/0")
 API_KEY_SALT = _env("API_KEY_SALT", "change-me")
 CORS_ORIGINS = _env("CORS_ORIGINS", "*")
@@ -407,7 +407,7 @@ async def cleanup_retention() -> None:
 # ------------------------------
 
 
-app = FastAPI(title="PrivacyEdge Analytics API", version="0.1.0")
+app = FastAPI(title="ZeroBanner Analytics API", version="0.1.0")
 
 origins = [o.strip() for o in CORS_ORIGINS.split(",") if o.strip()]
 app.add_middleware(

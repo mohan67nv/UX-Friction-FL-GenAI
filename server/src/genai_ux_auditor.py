@@ -1,5 +1,5 @@
 """
-PrivacyEdge GenAI UX Auditor
+ZeroBanner GenAI UX Auditor
 ============================
 
 AI-powered UX analysis using Retrieval-Augmented Generation (RAG).

@@ -1,4 +1,4 @@
-deployment_name: "PrivacyEdge Self-Hosted"
+deployment_name: "ZeroBanner Self-Hosted"
 
 # Options: saas | self_hosted_isolated | self_hosted_collaborative
 mode: self_hosted_isolated
@@ -7,7 +7,7 @@ mode: self_hosted_isolated
 global_sync:
   enabled: false
   frequency: weekly
-  endpoint: "https://global.privacyedge.io"
+  endpoint: "https://global.zerobanner.io"
   api_key: ""  # customer instance key for global sync (optional)
   deployment_id: "" # generated for self-hosted instances (run server/scripts/init_selfhost_config.py)
 

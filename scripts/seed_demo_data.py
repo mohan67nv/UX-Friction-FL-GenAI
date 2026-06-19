@@ -11,8 +11,8 @@ Run:
   python scripts/seed_demo_data.py
 
 Env:
-  DATABASE_URL=sqlite:///./privacyedge.db
-  DEMO_EMAIL=demo@privacyedge.local
+  DATABASE_URL=sqlite:///./zerobanner.db
+  DEMO_EMAIL=demo@zerobanner.local
   DEMO_PASSWORD=DemoPassword123!
 """
 
@@ -38,16 +38,16 @@ os.chdir(ROOT)
 
 if not os.getenv('DATABASE_URL'):
     # Use /tmp by default (generally writable in most environments)
-    os.environ['DATABASE_URL'] = "sqlite+aiosqlite:////tmp/privacyedge.db"
+    os.environ['DATABASE_URL'] = "sqlite+aiosqlite:////tmp/zerobanner.db"
 
 # Import server modules
 from src.auth import hash_password
 from src.database import APIKey, AsyncSessionLocal, FrictionEvent, Organization, OrgMember, Project, User, init_db
 
 
-DEMO_EMAIL = os.getenv("DEMO_EMAIL", "demo@privacyedge.local")
+DEMO_EMAIL = os.getenv("DEMO_EMAIL", "demo@zerobanner.local")
 DEMO_PASSWORD = os.getenv("DEMO_PASSWORD", "DemoPassword123!")
-DEMO_ORG = os.getenv("DEMO_ORG", "PrivacyEdge Demo GmbH")
+DEMO_ORG = os.getenv("DEMO_ORG", "ZeroBanner Demo GmbH")
 DEMO_PROJECT = os.getenv("DEMO_PROJECT", "Demo Website")
 DEMO_DOMAIN = os.getenv("DEMO_DOMAIN", "demo.example.de")
 DAYS = int(os.getenv("DEMO_DAYS", "7"))

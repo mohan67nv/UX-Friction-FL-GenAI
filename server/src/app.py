@@ -1,5 +1,5 @@
 """
-PrivacyEdge - Federated Learning Server
+ZeroBanner - Federated Learning Server
 ==========================================
 
 Core FastAPI backend implementing privacy-preserving UX analytics with Federated Learning.
@@ -357,11 +357,29 @@ async def compliance_info() -> dict[str, Any]:
 
 @app.post("/auth/register", response_model=AuthResponse)
 async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)) -> AuthResponse:
+    """
+    Register new user with Supabase Auth
+    Creates user in both Supabase auth.users and our users table
+    """
+    from .auth import register_with_supabase
+    from .supabase_client import get_or_create_user_from_supabase
+    
+    # Check if user exists in our database
     existing = await crud.get_user_by_email(db, body.email)
     if existing:
         raise HTTPException(status_code=409, detail="Email already registered")
-
-    user = await crud.create_user(db, body.email, body.password, body.name)
+    
+    # Register with Supabase Auth
+    supabase_response = await register_with_supabase(body.email, body.password, body.name)
+    supabase_user = supabase_response["user"]
+    session = supabase_response["session"]
+    
+    # Create user in our database linked to Supabase
+    user = await get_or_create_user_from_supabase(
+        supabase_id=supabase_user["id"],
+        email=supabase_user["email"],
+        name=supabase_user.get("name") or body.name
+    )
 
     # Demo-friendly bootstrap:
     # - Always ensure the user has at least one organization and one project
@@ -382,33 +400,74 @@ async def register(body: RegisterRequest, db: AsyncSession = Depends(get_db)) ->
                 # If project already exists or any constraint hits, ignore.
                 pass
 
-    token = create_access_token(user.id, user.email)
+    # Return Supabase token (not legacy JWT)
+    token = session["access_token"] if session else create_access_token(user.id, user.email)
     return AuthResponse(access_token=token, user={"id": user.id, "email": user.email, "name": user.name})
 
 
 @app.post("/auth/login", response_model=AuthResponse)
 async def login(body: LoginRequest, db: AsyncSession = Depends(get_db)) -> AuthResponse:
-    user = await crud.get_user_by_email(db, body.email)
-    if not user or not verify_password(body.password, user.password_hash):
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+    """
+    Login user with Supabase Auth
+    Supports both Supabase and legacy authentication
+    """
+    from .auth import login_with_supabase
+    from .supabase_client import get_or_create_user_from_supabase
+    
+    try:
+        # Try Supabase Auth first
+        supabase_response = await login_with_supabase(body.email, body.password)
+        supabase_user = supabase_response["user"]
+        session = supabase_response["session"]
+        
+        # Get or create user in our database
+        user = await get_or_create_user_from_supabase(
+            supabase_id=supabase_user["id"],
+            email=supabase_user["email"],
+            name=supabase_user.get("name")
+        )
+        
+        # Demo-friendly bootstrap for *existing* accounts that were created without an org/project.
+        auto_bootstrap = os.getenv("AUTO_BOOTSTRAP_ON_LOGIN", os.getenv("AUTO_BOOTSTRAP_ON_REGISTER", "1")).strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        if auto_bootstrap:
+            orgs = await crud.list_orgs_for_user(db, user.id)
+            if not orgs:
+                org = await crud.create_org_with_owner(db, user.id, (user.name or "Demo") + " Org")
+                try:
+                    await crud.create_project(db, org.id, name="Website", domain=None, privacy_mode="high")
+                except Exception:
+                    pass
 
-    # Demo-friendly bootstrap for *existing* accounts that were created without an org/project.
-    auto_bootstrap = os.getenv("AUTO_BOOTSTRAP_ON_LOGIN", os.getenv("AUTO_BOOTSTRAP_ON_REGISTER", "1")).strip().lower() in (
-        "1",
-        "true",
-        "yes",
-    )
-    if auto_bootstrap:
-        orgs = await crud.list_orgs_for_user(db, user.id)
-        if not orgs:
-            org = await crud.create_org_with_owner(db, user.id, (user.name or "Demo") + " Org")
-            try:
-                await crud.create_project(db, org.id, name="Website", domain=None, privacy_mode="high")
-            except Exception:
-                pass
+        # Return Supabase token
+        return AuthResponse(access_token=session["access_token"], user={"id": user.id, "email": user.email, "name": user.name})
+    
+    except HTTPException:
+        # Fallback to legacy auth (for backwards compatibility)
+        user = await crud.get_user_by_email(db, body.email)
+        if not user or not verify_password(body.password, user.password_hash):
+            raise HTTPException(status_code=401, detail="Invalid credentials")
 
-    token = create_access_token(user.id, user.email)
-    return AuthResponse(access_token=token, user={"id": user.id, "email": user.email, "name": user.name})
+        # Demo-friendly bootstrap for *existing* accounts that were created without an org/project.
+        auto_bootstrap = os.getenv("AUTO_BOOTSTRAP_ON_LOGIN", os.getenv("AUTO_BOOTSTRAP_ON_REGISTER", "1")).strip().lower() in (
+            "1",
+            "true",
+            "yes",
+        )
+        if auto_bootstrap:
+            orgs = await crud.list_orgs_for_user(db, user.id)
+            if not orgs:
+                org = await crud.create_org_with_owner(db, user.id, (user.name or "Demo") + " Org")
+                try:
+                    await crud.create_project(db, org.id, name="Website", domain=None, privacy_mode="high")
+                except Exception:
+                    pass
+
+        token = create_access_token(user.id, user.email)
+        return AuthResponse(access_token=token, user={"id": user.id, "email": user.email, "name": user.name})
 
 
 @app.get("/me")

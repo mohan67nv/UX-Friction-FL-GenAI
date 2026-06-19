@@ -17,7 +17,7 @@ langchain-community==0.3.14
 haystack-ai==2.8.0
 
 
-# Production-ready auth + DB (SQLite dev, Postgres prod)
+# Production-ready auth + DB (SQLite dev, Postgres prod, Supabase)
 sqlalchemy==2.0.36
 aiosqlite==0.20.0
 asyncpg==0.30.0
@@ -25,3 +25,6 @@ python-jose==3.3.0
 passlib==1.7.4
 python-multipart==0.0.20
 greenlet==3.1.1
+
+# Supabase SDK for auth and database
+supabase==2.11.0

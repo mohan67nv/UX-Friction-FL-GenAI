@@ -1,5 +1,5 @@
 """
-PrivacyEdge Intent Embedder Training Script
+ZeroBanner Intent Embedder Training Script
 ===========================================
 
 Trains a Transformer-based encoder (BERT-like architecture) for intent embeddings

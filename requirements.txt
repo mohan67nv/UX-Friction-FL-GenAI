@@ -1,4 +1,4 @@
-# PrivacyEdge - core backend requirements
+# ZeroBanner - core backend requirements
 # Create venv: python3 -m venv ux-fl-venv
 # Install: pip install -r requirements.txt
 
