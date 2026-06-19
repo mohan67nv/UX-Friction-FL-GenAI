@@ -45,6 +45,7 @@ export default function AuthCallbackPage() {
 
         if (data.session) {
           console.log('OAuth successful:', data.session.user.email);
+          document.cookie = `pe_token=${data.session.access_token}; path=/; max-age=86400; SameSite=Lax`;
           router.push('/app');
         } else {
           router.push('/login');
