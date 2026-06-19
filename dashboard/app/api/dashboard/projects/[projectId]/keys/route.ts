@@ -7,7 +7,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ projectId:
   if (!token) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
   const { projectId } = await ctx.params;
-  const res = await fetch(`${apiBaseUrl()}/dashboard/projects/${projectId}/api-keys`, {
+  const res = await fetch(`${apiBaseUrl()}/api/dashboard/projects/${projectId}/api-keys`, {
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'
   });
@@ -23,7 +23,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ projectId:
   const { projectId } = await ctx.params;
   const body = await request.json().catch(() => ({}));
 
-  const res = await fetch(`${apiBaseUrl()}/dashboard/projects/${projectId}/api-keys`, {
+  const res = await fetch(`${apiBaseUrl()}/api/dashboard/projects/${projectId}/api-keys`, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify(body),

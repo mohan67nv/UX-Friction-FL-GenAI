@@ -8,7 +8,7 @@ export async function POST(_request: Request, ctx: { params: Promise<{ projectId
 
   const { projectId, keyId } = await ctx.params;
 
-  const res = await fetch(`${apiBaseUrl()}/dashboard/projects/${projectId}/api-keys/${keyId}/revoke`, {
+  const res = await fetch(`${apiBaseUrl()}/api/dashboard/projects/${projectId}/api-keys/${keyId}/revoke`, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'

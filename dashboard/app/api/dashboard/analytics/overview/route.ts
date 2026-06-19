@@ -13,7 +13,7 @@ export async function GET(request: Request) {
   if (!projectId) return NextResponse.json({ error: 'missing project_id' }, { status: 400 });
 
   const res = await fetch(
-    `${apiBaseUrl()}/dashboard/analytics/overview?project_id=${encodeURIComponent(projectId)}&time_range=${encodeURIComponent(timeRange)}`,
+    `${apiBaseUrl()}/api/dashboard/analytics/overview?project_id=${encodeURIComponent(projectId)}&time_range=${encodeURIComponent(timeRange)}`,
     {
       headers: { authorization: `Bearer ${token}` },
       cache: 'no-store'

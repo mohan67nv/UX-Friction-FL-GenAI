@@ -8,7 +8,7 @@ export async function POST(_request: Request, ctx: { params: Promise<{ recId: st
 
   const { recId } = await ctx.params;
 
-  const res = await fetch(`${apiBaseUrl()}/dashboard/recommendations/${recId}/done`, {
+  const res = await fetch(`${apiBaseUrl()}/api/dashboard/recommendations/${recId}/done`, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'

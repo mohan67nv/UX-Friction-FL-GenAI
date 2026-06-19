@@ -8,7 +8,7 @@ export async function POST(request: Request) {
 
   const body = await request.json();
 
-  const res = await fetch(`${apiBaseUrl()}/dashboard/projects`, {
+  const res = await fetch(`${apiBaseUrl()}/api/dashboard/projects`, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify(body),

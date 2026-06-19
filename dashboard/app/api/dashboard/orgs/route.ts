@@ -6,7 +6,7 @@ export async function GET() {
   const token = (await cookies()).get('pe_token')?.value;
   if (!token) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
-  const res = await fetch(`${apiBaseUrl()}/dashboard/orgs`, {
+  const res = await fetch(`${apiBaseUrl()}/api/dashboard/orgs`, {
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'
   });
