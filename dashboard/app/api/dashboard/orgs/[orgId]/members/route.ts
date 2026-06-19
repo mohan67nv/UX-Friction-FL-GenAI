@@ -7,7 +7,7 @@ export async function GET(_request: Request, ctx: { params: Promise<{ orgId: str
   if (!token) return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
 
   const { orgId } = await ctx.params;
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/orgs/${orgId}/members`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/orgs/${orgId}/members`, {
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'
   });
@@ -23,7 +23,7 @@ export async function POST(request: Request, ctx: { params: Promise<{ orgId: str
   const { orgId } = await ctx.params;
   const body = await request.json().catch(() => ({}));
 
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/orgs/${orgId}/members`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/orgs/${orgId}/members`, {
     method: 'POST',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify(body),

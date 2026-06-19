@@ -12,7 +12,7 @@ export async function GET(request: Request) {
 
   const lang = (await cookies()).get('pe_lang')?.value || 'de';
 
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/recommendations/top?project_id=${encodeURIComponent(projectId)}&lang=${encodeURIComponent(lang)}`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/recommendations/top?project_id=${encodeURIComponent(projectId)}&lang=${encodeURIComponent(lang)}`, {
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'
   });

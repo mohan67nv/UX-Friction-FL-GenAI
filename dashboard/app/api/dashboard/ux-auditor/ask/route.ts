@@ -19,7 +19,7 @@ export async function POST(req: Request) {
     lang: body?.lang
   });
 
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/ux-auditor/ask`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/ux-auditor/ask`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',

@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const projectId = searchParams.get('project_id');
   if (!projectId) return NextResponse.json({ error: 'missing project_id' }, { status: 400 });
 
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/benchmarks?project_id=${encodeURIComponent(projectId)}`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/benchmarks?project_id=${encodeURIComponent(projectId)}`, {
     headers: { authorization: `Bearer ${token}` },
     cache: 'no-store'
   });

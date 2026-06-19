@@ -9,7 +9,7 @@ export async function PATCH(request: Request, ctx: { params: Promise<{ projectId
   const { projectId } = await ctx.params;
   const body = await request.json().catch(() => ({}));
 
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/projects/${projectId}`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/projects/${projectId}`, {
     method: 'PATCH',
     headers: { authorization: `Bearer ${token}`, 'content-type': 'application/json' },
     body: JSON.stringify(body),

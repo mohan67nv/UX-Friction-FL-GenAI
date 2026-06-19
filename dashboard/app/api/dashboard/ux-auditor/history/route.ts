@@ -15,7 +15,7 @@ export async function GET(request: Request) {
   if (!projectId) return NextResponse.json({ detail: 'missing project_id' }, { status: 400 });
 
   const res = await fetch(
-    `${apiBaseUrl()}/api/dashboard/ux-auditor/history?project_id=${encodeURIComponent(projectId)}&limit=${encodeURIComponent(limit)}`,
+    `${apiBaseUrl()}/dashboard/ux-auditor/history?project_id=${encodeURIComponent(projectId)}&limit=${encodeURIComponent(limit)}`,
     {
       headers: { authorization: `Bearer ${token}` },
       cache: 'no-store'

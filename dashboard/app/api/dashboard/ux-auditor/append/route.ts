@@ -11,7 +11,7 @@ export async function POST(req: Request) {
 
   const body = await req.json();
 
-  const res = await fetch(`${apiBaseUrl()}/api/dashboard/ux-auditor/append`, {
+  const res = await fetch(`${apiBaseUrl()}/dashboard/ux-auditor/append`, {
     method: 'POST',
     headers: {
       'content-type': 'application/json',
