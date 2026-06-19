@@ -1,6 +1,6 @@
 # Documentation
 
-This folder contains documentation for the PrivacyEdge project.
+This folder contains documentation for the ZeroBanner project.
 
 ## Public Documentation
 

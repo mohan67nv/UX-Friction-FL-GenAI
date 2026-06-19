@@ -1,4 +1,4 @@
-PrivacyEdge Analytics |
+ZeroBanner Analytics |
 
 Quick start:
 1) Copy env.example -> .env and adjust values.

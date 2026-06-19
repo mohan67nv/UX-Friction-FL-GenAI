@@ -1,8 +1,8 @@
-# 🎯 PrivacyEdge: Technical Implementation Overview
+# 🎯 ZeroBanner: Technical Implementation Overview
 
 ## What I Built
 
-I created PrivacyEdge, a privacy-first UX analytics platform using Federated Learning and Differential Privacy. As a solo developer, I implemented every component from the ML models to the full-stack application.
+I created ZeroBanner, a privacy-first UX analytics platform using Federated Learning and Differential Privacy. As a solo developer, I implemented every component from the ML models to the full-stack application.
 
 ### Core System Components
 
@@ -60,7 +60,7 @@ I created PrivacyEdge, a privacy-first UX analytics platform using Federated Lea
 
 ### Development Environment
 **Challenge**: No local development setup  
-**Solution**: I created the `uxfriction` virtual environment with 150+ packages  
+**Solution**: I created the `zerobanner` virtual environment with 150+ packages  
 **Outcome**: Full local development capability
 
 ---
@@ -253,7 +253,7 @@ I built this to showcase capabilities that are rare in the industry:
 
 ### How I Position This
 
-> "I built PrivacyEdge to demonstrate my ML engineering capabilities. The implementation is complete—I have functional client-side training, server-side aggregation, and differential privacy. I trained the models to 99%+ accuracy and deployed them in ONNX format for browser inference.
+> "I built ZeroBanner to demonstrate my ML engineering capabilities. The implementation is complete—I have functional client-side training, server-side aggregation, and differential privacy. I trained the models to 99%+ accuracy and deployed them in ONNX format for browser inference.
 >
 > I understand that taking systems to production scale requires additional expertise—monitoring infrastructure, security audits, load testing, DevOps optimization—and I'm eager to learn these aspects from experienced engineers.
 >
@@ -273,8 +273,8 @@ I built this to showcase capabilities that are rare in the industry:
 I configured Docker Compose for easy deployment:
 
 ```bash
-git clone https://github.com/mohan67nv/UX-Friction-FL-GenAI.git
-cd UX-Friction-FL-GenAI
+git clone https://github.com/mohan67nv/ZeroBanner-FL-GenAI.git
+cd ZeroBanner-FL-GenAI
 cp env.example .env
 docker-compose up -d
 ```

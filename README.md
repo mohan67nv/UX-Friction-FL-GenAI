@@ -1,4 +1,4 @@
-# PrivacyEdge
+# ZeroBanner
 
 > Privacy-first UX analytics platform using Federated Learning and Differential Privacy
 
@@ -8,7 +8,7 @@
 
 ## Overview
 
-PrivacyEdge is a GDPR-compliant UX analytics platform that detects user friction patterns (rage clicks, hesitation, confusion) **without collecting personally identifiable information**. It uses **Federated Learning** to train models on-device while keeping user data completely local.
+ZeroBanner is a GDPR-compliant UX analytics platform that detects user friction patterns (rage clicks, hesitation, confusion) **without collecting personally identifiable information**. It uses **Federated Learning** to train models on-device while keeping user data completely local.
 
 ### Key Features
 
@@ -52,7 +52,7 @@ PrivacyEdge is a GDPR-compliant UX analytics platform that detects user friction
 ```bash
 # 1. Clone and configure
 git clone <your-repo-url>
-cd PrivacyEdge
+cd ZeroBanner
 cp env.example .env
 
 # 2. Start all services

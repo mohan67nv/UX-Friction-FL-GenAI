@@ -5,7 +5,7 @@ node_modules
 __pycache__
 *.pyc
 .venv
-uxfriction/
+zerobanner/
 .next
 out
 dist
@@ -19,14 +19,8 @@ dashboard/tsconfig.tsbuildinfo
 # *.pth
 # ml-training/.venv
 
-# Internal notes and drafts
-docs/*_CHECK.md
-docs/*_SUMMARY.md
-docs/*_old.md
-docs/QUICK_*.md
-**/FOR_*.md
-**/EMPLOYER_*.md
-**/TRAINING_*.md
-
 # Development scripts
 setup_*.sh
+
+# Ignore old nextjs backup
+.next_old_backup/

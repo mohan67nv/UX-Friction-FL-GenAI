@@ -1,6 +1,6 @@
 # Demo Preparation Guide
 
-**Goal**: Prepare a working 5-10 minute demo for job interviews showing the complete PrivacyEdge system.
+**Goal**: Prepare a working 5-10 minute demo for job interviews showing the complete ZeroBanner system.
 
 ---
 
@@ -75,13 +75,13 @@ pnpm build  # Builds dist/index.js
 ```html
 <!DOCTYPE html>
 <html>
-<head><title>PrivacyEdge SDK Test</title></head>
+<head><title>ZeroBanner SDK Test</title></head>
 <body>
   <h1>Click around to generate friction events</h1>
   <button id="testBtn">Rapid Click Me (Rage Test)</button>
   <script src="http://localhost:8000/api/v1/sdk/client.js"></script>
   <script>
-    PrivacyEdge.init({
+    ZeroBanner.init({
       apiKey: 'YOUR_DEMO_API_KEY',
       apiBaseUrl: 'http://localhost:8000'
     });
@@ -215,7 +215,7 @@ app.mount("/models", StaticFiles(directory="ml-training"), name="models")
    ```bash
    docker-compose up -d
    docker ps  # Verify all services running
-   docker logs ux-friction-fl-genai-api-1  # Check for errors
+   docker logs zerobanner-fl-genai-api-1  # Check for errors
    ```
 
 3. ✅ **Test Dashboard Access** (30 min)
@@ -313,7 +313,7 @@ app.mount("/models", StaticFiles(directory="ml-training"), name="models")
 ### **Slide 1: Problem Statement (30 seconds)**
 > "Traditional UX analytics like Google Analytics collect user data centrally. This creates privacy risks and GDPR compliance issues. 
 > 
-> I built PrivacyEdge to solve this using Federated Learning - the same technique Google uses for Android keyboard predictions."
+> I built ZeroBanner to solve this using Federated Learning - the same technique Google uses for Android keyboard predictions."
 
 ---
 

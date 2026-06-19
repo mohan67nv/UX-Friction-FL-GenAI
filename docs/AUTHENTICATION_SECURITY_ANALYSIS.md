@@ -350,8 +350,8 @@ CORS_ORIGINS = os.getenv("CORS_ORIGINS", "*")
 ```python
 # Strict CORS for production
 ALLOWED_ORIGINS = [
-    "https://app.privacyedge.com",
-    "https://dashboard.privacyedge.com",
+    "https://app.zerobanner.com",
+    "https://dashboard.zerobanner.com",
     # NO wildcards in production
 ]
 
@@ -591,7 +591,7 @@ async def get_current_user(token: str):
 - ❌ Vendor lock-in
 - ❌ Less control
 
-**Recommendation for PrivacyEdge:**
+**Recommendation for ZeroBanner:**
 - **Not yet** - Wait until you have enterprise customers demanding SSO
 - Start with Supabase, migrate to Auth0/Clerk later if needed
 
@@ -640,7 +640,7 @@ async def get_current_user(token: str):
    from starlette.middleware.trustedhost import TrustedHostMiddleware
    
    app.add_middleware(HTTPSRedirectMiddleware)
-   app.add_middleware(TrustedHostMiddleware, allowed_hosts=["privacyedge.com", "*.privacyedge.com"])
+   app.add_middleware(TrustedHostMiddleware, allowed_hosts=["zerobanner.com", "*.zerobanner.com"])
    
    @app.middleware("http")
    async def add_security_headers(request, call_next):
@@ -655,7 +655,7 @@ async def get_current_user(token: str):
 7. **Strict CORS Configuration** (30 min)
    ```python
    # .env
-   ALLOWED_ORIGINS=https://app.privacyedge.com,https://dashboard.privacyedge.com
+   ALLOWED_ORIGINS=https://app.zerobanner.com,https://dashboard.zerobanner.com
    
    # app.py
    origins = os.getenv("ALLOWED_ORIGINS", "").split(",")
@@ -809,7 +809,7 @@ async def get_current_user(token: str):
 
 ---
 
-## 🎯 **My Recommendation for PrivacyEdge**
+## 🎯 **My Recommendation for ZeroBanner**
 
 ### **For MVP → First 100 Users:**
 **Go with Supabase Auth (Phase 4)**

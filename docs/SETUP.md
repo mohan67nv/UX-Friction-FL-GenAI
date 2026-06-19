@@ -14,7 +14,7 @@ The fastest way to run the entire stack:
 ```bash
 # 1. Clone and navigate
 git clone <your-repo-url>
-cd UX-Friction-FL-GenAI
+cd ZeroBanner-FL-GenAI
 
 # 2. Copy environment configuration
 cp env.example .env

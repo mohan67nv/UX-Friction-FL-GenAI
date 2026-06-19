@@ -1,6 +1,6 @@
 # Federated Learning & ML Pipeline Implementation
 
-## Project: PrivacyEdge/ZeroBanner - Privacy-First UX Analytics Platform
+## Project: ZeroBanner/ZeroBanner - Privacy-First UX Analytics Platform
 
 > **For Job Application**: This document details the complete Federated Learning workflow, ML pipelines, and privacy-preserving machine learning implementations in this repository.
 
@@ -670,4 +670,4 @@ This repository demonstrates **production-ready Federated Learning** with:
 
 **Author**: Generated for job application by analyzing complete codebase  
 **Date**: June 18, 2026  
-**Repository**: UX-Friction-FL-GenAI (PrivacyEdge/ZeroBanner)
+**Repository**: ZeroBanner-FL-GenAI (ZeroBanner/ZeroBanner)

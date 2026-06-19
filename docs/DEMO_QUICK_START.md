@@ -19,7 +19,7 @@ Before the interview:
 ### 1. Environment Setup (5 minutes)
 
 ```bash
-cd /home/mnvgowda/MNVProjects/UX-Friction-FL-GenAI
+cd /home/mnvgowda/MNVProjects/ZeroBanner-FL-GenAI
 
 # Copy environment template
 cp env.example .env
@@ -31,10 +31,10 @@ nano .env
 **Required changes in `.env`:**
 ```bash
 # Database (default works)
-PRIVACYEDGE_DATABASE_URL=postgresql://privacyedge:privacyedge@postgres:5432/privacyedge
+ZEROBANNER_DATABASE_URL=postgresql://zerobanner:zerobanner@postgres:5432/zerobanner
 
 # API Key Salt (change this)
-PRIVACYEDGE_API_KEY_SALT=your-random-string-here
+ZEROBANNER_API_KEY_SALT=your-random-string-here
 
 # Dashboard URL (default works)
 NEXT_PUBLIC_API_BASE_URL=http://localhost:8000
@@ -65,11 +65,11 @@ docker-compose ps
 **Expected output:**
 ```
 NAME                                    STATUS
-ux-friction-fl-genai-postgres-1         Up (healthy)
-ux-friction-fl-genai-redis-1            Up
-ux-friction-fl-genai-qdrant-1           Up
-ux-friction-fl-genai-api-1              Up
-ux-friction-fl-genai-dashboard-1        Up
+zerobanner-fl-genai-postgres-1         Up (healthy)
+zerobanner-fl-genai-redis-1            Up
+zerobanner-fl-genai-qdrant-1           Up
+zerobanner-fl-genai-api-1              Up
+zerobanner-fl-genai-dashboard-1        Up
 ```
 
 ---
@@ -99,7 +99,7 @@ open http://localhost:3000
 ## 🎬 5-Minute Demo Script
 
 ### **1. Introduction (30 seconds)**
-> "I built PrivacyEdge, a privacy-first UX analytics platform using Federated Learning.
+> "I built ZeroBanner, a privacy-first UX analytics platform using Federated Learning.
 > 
 > Traditional analytics like Google Analytics collect user data centrally, creating privacy risks. My system trains ML models in users' browsers, so personal data never leaves their device.
 >

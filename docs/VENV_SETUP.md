@@ -1,6 +1,6 @@
 # 🐍 Python Virtual Environment Setup Complete!
 
-## ✅ **Virtual Environment Created: `uxfriction`**
+## ✅ **Virtual Environment Created: `zerobanner`**
 
 Your Python virtual environment is ready with all dependencies installed!
 
@@ -10,17 +10,17 @@ Your Python virtual environment is ready with all dependencies installed!
 
 ### **For Fish Shell** (you're using this):
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 ```
 
 ### **For Bash/Zsh**:
 ```bash
-source uxfriction/bin/activate
+source zerobanner/bin/activate
 ```
 
 ### **For Windows**:
 ```cmd
-uxfriction\Scripts\activate
+zerobanner\Scripts\activate
 ```
 
 ---
@@ -53,7 +53,7 @@ uxfriction\Scripts\activate
 
 ### **1. Activate Environment**
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 ```
 
 ### **2. Check Python Version**
@@ -92,7 +92,7 @@ deactivate
 Test that everything works:
 
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 
 # Test PyTorch
 python -c "import torch; print(f'PyTorch: {torch.__version__}')"
@@ -120,7 +120,7 @@ FastAPI: 0.115.6
 ## 📦 **What Was Installed**
 
 ### **Installation Summary**:
-1. ✅ Created venv: `uxfriction/`
+1. ✅ Created venv: `zerobanner/`
 2. ✅ Upgraded pip to 26.1.2
 3. ✅ Installed 150+ packages (~3 GB)
 4. ✅ Both server & ML training dependencies
@@ -137,13 +137,13 @@ FastAPI: 0.115.6
 ### **Issue: "command not found: python"**
 Solution: Activate the venv first!
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 ```
 
 ### **Issue: "ModuleNotFoundError"**
 Solution: Make sure venv is activated and reinstall:
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 pip install -r requirements.txt
 pip install -r requirements-ml.txt
 ```
@@ -151,9 +151,9 @@ pip install -r requirements-ml.txt
 ### **Issue: Want to recreate venv**
 Solution:
 ```fish
-rm -rf uxfriction
-python3 -m venv uxfriction
-source uxfriction/bin/activate.fish
+rm -rf zerobanner
+python3 -m venv zerobanner
+source zerobanner/bin/activate.fish
 pip install --upgrade pip
 pip install -r requirements.txt
 pip install -r requirements-ml.txt
@@ -165,14 +165,14 @@ pip install -r requirements-ml.txt
 
 ### **Activate + Run Server**:
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 cd server
 uvicorn src.main:app --reload --host 0.0.0.0 --port 8000
 ```
 
 ### **Activate + Train Models**:
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 cd ml-training
 python train_foundation_model.py
 python train_intent_embedder.py
@@ -180,7 +180,7 @@ python train_intent_embedder.py
 
 ### **Activate + Run Tests**:
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 cd server
 pytest tests/ -v
 ```
@@ -191,11 +191,11 @@ pytest tests/ -v
 
 1. **Always activate before running Python commands**:
    ```fish
-   source uxfriction/bin/activate.fish
+   source zerobanner/bin/activate.fish
    ```
 
 2. **Check if venv is active**:
-   You'll see `(uxfriction)` in your terminal prompt
+   You'll see `(zerobanner)` in your terminal prompt
 
 3. **Update dependencies**:
    ```fish
@@ -210,13 +210,13 @@ pytest tests/ -v
    ```
 
 5. **Use PyCharm/VS Code**:
-   - Point to: `/home/mnvgowda/MNVProjects/UX-Friction-FL-GenAI/uxfriction/bin/python`
+   - Point to: `/home/mnvgowda/MNVProjects/ZeroBanner-FL-GenAI/zerobanner/bin/python`
 
 ---
 
 ## ✅ **Status**
 
-- **Venv Location**: `/home/mnvgowda/MNVProjects/UX-Friction-FL-GenAI/uxfriction/`
+- **Venv Location**: `/home/mnvgowda/MNVProjects/ZeroBanner-FL-GenAI/zerobanner/`
 - **Python Version**: 3.12.3
 - **Pip Version**: 26.1.2
 - **Total Size**: ~3 GB
@@ -230,7 +230,7 @@ pytest tests/ -v
 Your Python environment is fully configured. Just activate it before working:
 
 ```fish
-source uxfriction/bin/activate.fish
+source zerobanner/bin/activate.fish
 ```
 
 **Happy coding!** 🚀
