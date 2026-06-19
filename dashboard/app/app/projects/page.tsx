@@ -20,19 +20,35 @@ export default function ProjectsPage() {
 
   useEffect(() => {
     (async () => {
-      const o = await fetch('/api/dashboard/orgs');
-      const orgList = (await o.json()) as Org[];
-      setOrgs(orgList);
-      if (!orgId && orgList.length) setOrgId(orgList[0].id);
+      try {
+        const o = await fetch('/api/dashboard/orgs');
+        const orgList = await o.json();
+        if (Array.isArray(orgList)) {
+          setOrgs(orgList);
+          if (!orgId && orgList.length) setOrgId(orgList[0].id);
+        } else {
+          setOrgs([]);
+        }
+      } catch (err) {
+        setOrgs([]);
+      }
     })();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('/api/dashboard/projects');
-      const list = (await res.json()) as Project[];
-      setProjects(list);
+      try {
+        const res = await fetch('/api/dashboard/projects');
+        const list = await res.json();
+        if (Array.isArray(list)) {
+          setProjects(list);
+        } else {
+          setProjects([]);
+        }
+      } catch (err) {
+        setProjects([]);
+      }
     })();
   }, [createdKey]);
 
@@ -51,51 +67,49 @@ export default function ProjectsPage() {
 
   return (
     <>
-      <div className="topbar">
-        <div>
-          <div className="h1">{t('projectsTitle')}</div>
-          <div className="sub">{t('projectsSubtitle')}</div>
-        </div>
+      <div className="flex flex-col mb-5">
+        <h1 className="text-[18px] font-medium text-text-primary mb-0.5 tracking-tight">{t('projectsTitle')}</h1>
+        <p className="text-[13px] text-text-secondary">{t('projectsSubtitle')}</p>
       </div>
 
-      <div className="grid">
-        <div className="card" style={{ gridColumn: 'span 6' }}>
-          <h3>{t('projectsCreate')}</h3>
-          <div style={{ display: 'grid', gap: 10 }}>
-            <select className="input" value={orgId} onChange={(e) => setOrgId(e.target.value)}>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <div className="card flex flex-col gap-3">
+          <h3 className="m-0">{t('projectsCreate')}</h3>
+          <div className="flex flex-col gap-2.5">
+            <select className="input text-[13px]" value={orgId} onChange={(e) => setOrgId(e.target.value)}>
               {orgs.map((o) => (
                 <option key={o.id} value={o.id}>
                   {o.name}
                 </option>
               ))}
+              {orgs.length === 0 && <option value="">No organizations available</option>}
             </select>
-            <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Marketing site" />
+            <input className="input text-[13px]" value={name} onChange={(e) => setName(e.target.value)} placeholder="Marketing site" />
             <input className="input" value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="example.de" />
-            <select className="input" value={privacyMode} onChange={(e) => setPrivacyMode(e.target.value as any)}>
+            <select className="input text-[13px]" value={privacyMode} onChange={(e) => setPrivacyMode(e.target.value as any)}>
               <option value="standard">standard</option>
               <option value="high">high</option>
               <option value="maximum">maximum</option>
             </select>
-            <button className="btn" onClick={createProject}>
+            <button className="btn mt-2" onClick={createProject}>
               {t('commonCreate')}
             </button>
           </div>
           {createdKey ? (
-            <>
-              <hr className="hr" />
-              <h3>API key (copy now)</h3>
+            <div className="mt-4 pt-4 border-t border-border">
+              <h3 className="text-[13px] font-medium mb-2">API key (copy now)</h3>
               <pre className="code">{createdKey}</pre>
-            </>
+            </div>
           ) : null}
         </div>
 
-        <div className="card" style={{ gridColumn: 'span 6' }}>
-          <h3>{t('projectsYour')}</h3>
-          <div style={{ display: 'grid', gap: 10 }}>
+        <div className="card flex flex-col gap-3">
+          <h3 className="m-0">{t('projectsYour')}</h3>
+          <div className="flex flex-col gap-2.5">
             {projects.map((p) => (
-              <div key={p.id} style={{ border: '1px solid var(--border)', borderRadius: 12, padding: 12 }}>
-                <div style={{ fontWeight: 800 }}>{p.name}</div>
-                <div className="kpiSmall">{p.domain || '—'} • privacy: {p.privacy_mode}</div>
+              <div key={p.id} className="bg-background-elevated border border-border rounded-md p-3 flex flex-col">
+                <div className="text-[13px] font-semibold text-text-primary mb-0.5">{p.name}</div>
+                <div className="text-[11px] text-text-tertiary">{p.domain || '—'} • privacy: {p.privacy_mode}</div>
               </div>
             ))}
             {!projects.length ? <div className="sub">{t('projectsNoProjects')}</div> : null}

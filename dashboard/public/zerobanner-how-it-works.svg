@@ -1,0 +1,153 @@
+<svg width="1200" height="560" viewBox="0 0 1200 560" xmlns="http://www.w3.org/2000/svg" font-family="'Segoe UI', system-ui, -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#121212"/>
+      <stop offset="50%" stop-color="#1C1C1C"/>
+      <stop offset="100%" stop-color="#121212"/>
+    </linearGradient>
+    <linearGradient id="pill" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3ECF8E"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="arrow-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.8"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.8"/>
+    </linearGradient>
+    <linearGradient id="card1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="card2" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="card3" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#10b981" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="card4" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.18"/>
+      <stop offset="100%" stop-color="#059669" stop-opacity="0.06"/>
+    </linearGradient>
+    <linearGradient id="glow1" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3ECF8E" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glow2" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3ECF8E" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glow3" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3ECF8E" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="glow4" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3ECF8E" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#3ECF8E" stop-opacity="0"/>
+    </linearGradient>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M1 1L9 5L1 9" fill="none" stroke="#3ECF8E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="560" fill="url(#bg)"/>
+
+  <!-- Subtle star dots -->
+  <circle cx="80"  cy="60"  r="1"   fill="#fff" opacity="0.25"/>
+  <circle cx="240" cy="30"  r="1.5" fill="#fff" opacity="0.15"/>
+  <circle cx="950" cy="50"  r="1"   fill="#fff" opacity="0.2"/>
+  <circle cx="1120" cy="120" r="1.5" fill="#fff" opacity="0.15"/>
+  <circle cx="600" cy="20"  r="1"   fill="#fff" opacity="0.2"/>
+  <circle cx="1050" cy="500" r="1"  fill="#fff" opacity="0.2"/>
+  <circle cx="100" cy="500" r="1.5" fill="#fff" opacity="0.15"/>
+
+  <!-- Ambient glow -->
+  <ellipse cx="250"  cy="380" rx="180" ry="120" fill="#3ECF8E" opacity="0.04"/>
+  <ellipse cx="950"  cy="380" rx="180" ry="120" fill="#10b981" opacity="0.04"/>
+
+  <!-- ── TOP PILL + HEADLINE ── -->
+  <rect x="480" y="22" width="240" height="28" rx="14" fill="url(#pill)" opacity="0.9"/>
+  <text x="600" y="41" text-anchor="middle" fill="#0A0A0A" font-size="11" font-weight="700" letter-spacing="2">HOW ZEROBANNER WORKS</text>
+
+  <text x="600" y="90" text-anchor="middle" fill="#fff"     font-size="32" font-weight="700">See Every User. Track Nobody.</text>
+  <text x="600" y="118" text-anchor="middle" fill="#94a3b8" font-size="14" font-weight="400">The world's first UX analytics tool that needs zero cookie consent.</text>
+
+  <!-- ── CONNECTOR ARROWS ── -->
+  <line x1="268" y1="355" x2="310" y2="355" stroke="#3ECF8E" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7" marker-end="url(#arr)"/>
+  <line x1="558" y1="355" x2="600" y2="355" stroke="#3ECF8E" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7" marker-end="url(#arr)"/>
+  <line x1="848" y1="355" x2="890" y2="355" stroke="#3ECF8E" stroke-width="1.5" stroke-dasharray="5 4" opacity="0.7" marker-end="url(#arr)"/>
+
+  <!-- ══════════════════════════
+       CARD 1 — USER VISITS
+  ══════════════════════════ -->
+  <rect x="30"  y="148" width="248" height="40" rx="8" fill="url(#glow1)"/>
+  <rect x="30"  y="172" width="248" height="300" rx="18" fill="url(#card1)" stroke="#3ECF8E" stroke-width="1" stroke-opacity="0.5"/>
+  <rect x="52"  y="190" width="36" height="22" rx="11" fill="#3ECF8E" opacity="0.35"/>
+  <text x="70"  y="205" text-anchor="middle" fill="#D1FAE5" font-size="11" font-weight="700">01</text>
+  <text x="154" y="268" text-anchor="middle" font-size="48">🌐</text>
+  <text x="154" y="304" text-anchor="middle" fill="#F3F4F6" font-size="16" font-weight="700">User Visits Your Site</text>
+  <line x1="54" y1="322" x2="254" y2="322" stroke="#3ECF8E" stroke-width="0.5" opacity="0.3"/>
+  <text x="154" y="346" text-anchor="middle" fill="#6EE7B7" font-size="12">No cookie banner appears</text>
+  <text x="154" y="366" text-anchor="middle" fill="#6EE7B7" font-size="12">They browse freely</text>
+  <rect x="54" y="388" width="200" height="24" rx="12" fill="#3ECF8E" opacity="0.18"/>
+  <text x="154" y="404" text-anchor="middle" fill="#34D399" font-size="11">100% traffic — not just 30%</text>
+  <rect x="54" y="420" width="200" height="24" rx="12" fill="#3ECF8E" opacity="0.12"/>
+  <text x="154" y="436" text-anchor="middle" fill="#6EE7B7" font-size="11">No consent needed. Ever.</text>
+
+  <!-- ══════════════════════════
+       CARD 2 — ON-DEVICE AI
+  ══════════════════════════ -->
+  <rect x="320" y="148" width="248" height="40" rx="8" fill="url(#glow2)"/>
+  <rect x="320" y="172" width="248" height="300" rx="18" fill="url(#card2)" stroke="#3ECF8E" stroke-width="1" stroke-opacity="0.5"/>
+  <rect x="342" y="190" width="36" height="22" rx="11" fill="#3ECF8E" opacity="0.35"/>
+  <text x="360" y="205" text-anchor="middle" fill="#D1FAE5" font-size="11" font-weight="700">02</text>
+  <text x="444" y="268" text-anchor="middle" font-size="48">🔒</text>
+  <text x="444" y="304" text-anchor="middle" fill="#F3F4F6" font-size="16" font-weight="700">AI Runs in Browser</text>
+  <line x1="344" y1="322" x2="544" y2="322" stroke="#3ECF8E" stroke-width="0.5" opacity="0.3"/>
+  <text x="444" y="346" text-anchor="middle" fill="#6EE7B7" font-size="12">Detects rage clicks, confusion</text>
+  <text x="444" y="366" text-anchor="middle" fill="#6EE7B7" font-size="12">drop-offs — on their device</text>
+  <rect x="344" y="388" width="200" height="24" rx="12" fill="#3ECF8E" opacity="0.18"/>
+  <text x="444" y="404" text-anchor="middle" fill="#34D399" font-size="11">Raw data never leaves device</text>
+  <rect x="344" y="420" width="200" height="24" rx="12" fill="#3ECF8E" opacity="0.12"/>
+  <text x="444" y="436" text-anchor="middle" fill="#6EE7B7" font-size="11">Zero PII collected. Ever.</text>
+
+  <!-- ══════════════════════════
+       CARD 3 — AGGREGATION
+  ══════════════════════════ -->
+  <rect x="610" y="148" width="248" height="40" rx="8" fill="url(#glow3)"/>
+  <rect x="610" y="172" width="248" height="300" rx="18" fill="url(#card3)" stroke="#3ECF8E" stroke-width="1" stroke-opacity="0.5"/>
+  <rect x="632" y="190" width="36" height="22" rx="11" fill="#3ECF8E" opacity="0.35"/>
+  <text x="650" y="205" text-anchor="middle" fill="#D1FAE5" font-size="11" font-weight="700">03</text>
+  <text x="734" y="268" text-anchor="middle" font-size="48">⚡</text>
+  <text x="734" y="304" text-anchor="middle" fill="#F3F4F6" font-size="16" font-weight="700">Patterns Aggregated</text>
+  <line x1="634" y1="322" x2="834" y2="322" stroke="#3ECF8E" stroke-width="0.5" opacity="0.3"/>
+  <text x="734" y="346" text-anchor="middle" fill="#6EE7B7" font-size="12">Only math sent to server</text>
+  <text x="734" y="366" text-anchor="middle" fill="#6EE7B7" font-size="12">No personal data. Ever.</text>
+  <rect x="634" y="388" width="200" height="24" rx="12" fill="#3ECF8E" opacity="0.18"/>
+  <text x="734" y="404" text-anchor="middle" fill="#34D399" font-size="11">Hetzner Frankfurt 🇩🇪 — GDPR safe</text>
+  <rect x="634" y="420" width="200" height="24" rx="12" fill="#3ECF8E" opacity="0.12"/>
+  <text x="734" y="436" text-anchor="middle" fill="#6EE7B7" font-size="11">Differential privacy applied</text>
+
+  <!-- ══════════════════════════
+       CARD 4 — YOU GET ANSWERS
+  ══════════════════════════ -->
+  <rect x="900" y="148" width="268" height="40" rx="8" fill="url(#glow4)"/>
+  <rect x="900" y="172" width="268" height="300" rx="18" fill="url(#card4)" stroke="#3ECF8E" stroke-width="1" stroke-opacity="0.5"/>
+  <rect x="922" y="190" width="36" height="22" rx="11" fill="#3ECF8E" opacity="0.35"/>
+  <text x="940" y="205" text-anchor="middle" fill="#D1FAE5" font-size="11" font-weight="700">04</text>
+  <text x="1034" y="268" text-anchor="middle" font-size="48">📊</text>
+  <text x="1034" y="304" text-anchor="middle" fill="#F3F4F6" font-size="16" font-weight="700">You Get Answers</text>
+  <line x1="924" y1="322" x2="1144" y2="322" stroke="#3ECF8E" stroke-width="0.5" opacity="0.3"/>
+  <text x="1034" y="346" text-anchor="middle" fill="#6EE7B7" font-size="12">Not just data — AI tells</text>
+  <text x="1034" y="366" text-anchor="middle" fill="#6EE7B7" font-size="12">you WHY users are leaving</text>
+  <rect x="924" y="388" width="220" height="24" rx="12" fill="#3ECF8E" opacity="0.18"/>
+  <text x="1034" y="404" text-anchor="middle" fill="#34D399" font-size="11">"Safari CSS bug — fix in 15 min"</text>
+  <rect x="924" y="420" width="220" height="24" rx="12" fill="#3ECF8E" opacity="0.12"/>
+  <text x="1034" y="436" text-anchor="middle" fill="#6EE7B7" font-size="11">Revenue impact calculated</text>
+
+  <!-- ── FOOTER ── -->
+  <text x="600" y="506" text-anchor="middle" fill="#334155" font-size="11" letter-spacing="2">PRIVALYTICS · ZEROBANNER</text>
+  <text x="600" y="526" text-anchor="middle" fill="#2d3748" font-size="11">TDDDG §25 Exempt  ·  GDPR Compliant  ·  No Consent Needed  ·  Hetzner Frankfurt 🇩🇪</text>
+
+</svg>

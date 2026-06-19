@@ -19,7 +19,7 @@ export type TimelinePoint = {
 
 export function TimelineStacked(props: { points: TimelinePoint[] }) {
   return (
-    <div style={{ width: '100%', height: 280 }}>
+    <div style={{ width: '100%', height: '100%', minWidth: 0 }}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={props.points} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
           <XAxis dataKey="hour" tick={{ fill: '#9aa7c7', fontSize: 11 }} />

@@ -17,15 +17,23 @@ export default function SettingsPage() {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch('/api/dashboard/projects');
-      const list = (await res.json()) as Project[];
-      setProjects(list);
-      if (list.length) {
-        setProjectId(list[0].id);
-        setName(list[0].name);
-        setPrivacyMode(list[0].privacy_mode as any);
-        setDomain(list[0].domain || '');
-        setIsActive(list[0].is_active ?? true);
+      try {
+        const res = await fetch('/api/dashboard/projects');
+        const list = await res.json();
+        if (Array.isArray(list)) {
+          setProjects(list);
+          if (list.length) {
+            setProjectId(list[0].id);
+            setName(list[0].name);
+            setPrivacyMode(list[0].privacy_mode as any);
+            setDomain(list[0].domain || '');
+            setIsActive(list[0].is_active ?? true);
+          }
+        } else {
+          setProjects([]);
+        }
+      } catch (e) {
+        setProjects([]);
       }
     })();
   }, []);
@@ -53,13 +61,13 @@ export default function SettingsPage() {
 
   return (
     <>
-      <div className="topbar">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5">
         <div>
-          <div className="h1">{t('settingsTitle')}</div>
-          <div className="sub">{t('settingsSubtitle')}</div>
+          <h1 className="text-[18px] font-medium text-text-primary mb-0.5 tracking-tight">{t('settingsTitle')}</h1>
+          <p className="text-[13px] text-text-secondary">{t('settingsSubtitle')}</p>
         </div>
         <select
-          className="input"
+          className="input text-[13px] py-1.5 px-2 w-48 shrink-0"
           value={projectId}
           onChange={(e) => {
             const id = e.target.value;
@@ -72,47 +80,58 @@ export default function SettingsPage() {
               setIsActive(p.is_active ?? true);
             }
           }}
-          style={{ width: 280 }}
         >
           {projects.map((p) => (
             <option key={p.id} value={p.id}>
               {p.name}
             </option>
           ))}
+          {projects.length === 0 && <option value="">No projects available</option>}
         </select>
       </div>
 
-      <div className="grid">
-        <div className="card" style={{ gridColumn: 'span 6' }}>
-          <h3>{t('settingsName')}</h3>
-          <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Marketing site" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
+        <div className="card flex flex-col gap-3">
+          <div>
+            <h3 className="m-0 mb-1">{t('settingsName')}</h3>
+            <input className="input" value={name} onChange={(e) => setName(e.target.value)} placeholder="Marketing site" />
+          </div>
 
-          <h3 style={{ marginTop: 12 }}>{t('settingsPrivacyMode')}</h3>
-          <div className="sub">Controls differential privacy + sampling defaults (Germany-first recommended: high).</div>
+          <div>
+            <h3 className="m-0 mb-1">{t('settingsPrivacyMode')}</h3>
+            <div className="text-[11px] text-text-tertiary mb-2">Controls differential privacy + sampling defaults (Germany-first recommended: high).</div>
+            <select className="input" value={privacyMode} onChange={(e) => setPrivacyMode(e.target.value as any)}>
+              <option value="standard">standard</option>
+              <option value="high">high</option>
+              <option value="maximum">maximum</option>
+            </select>
+          </div>
 
-          <h3 style={{ marginTop: 12 }}>{t('settingsDomain')}</h3>
-          <input className="input" value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="example.de" />
+          <div>
+            <h3 className="m-0 mb-1">{t('settingsDomain')}</h3>
+            <input className="input" value={domain} onChange={(e) => setDomain(e.target.value)} placeholder="example.de" />
+          </div>
 
-          <h3 style={{ marginTop: 12 }}>{t('settingsActive')}</h3>
-          <label className="sub" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
-            Enabled
-          </label>
-          <select className="input" value={privacyMode} onChange={(e) => setPrivacyMode(e.target.value as any)} style={{ marginTop: 10 }}>
-            <option value="standard">standard</option>
-            <option value="high">high</option>
-            <option value="maximum">maximum</option>
-          </select>
-          <button className="btn" style={{ marginTop: 10 }} onClick={save}>
-            {t('commonSave')}
-          </button>
-          {status ? <div className="kpiSmall" style={{ marginTop: 10 }}>{status}</div> : null}
+          <div>
+            <h3 className="m-0 mb-1">{t('settingsActive')}</h3>
+            <label className="text-[13px] flex items-center gap-2 cursor-pointer">
+              <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
+              Enabled
+            </label>
+          </div>
+          
+          <div className="mt-2 flex items-center gap-3">
+            <button className="btn" onClick={save}>
+              {t('commonSave')}
+            </button>
+            {status ? <div className="text-[11px] text-brand">{status}</div> : null}
+          </div>
         </div>
 
-        <div className="card" style={{ gridColumn: 'span 6' }}>
-          <h3>Germany compliance</h3>
-          <div className="sub" style={{ lineHeight: 1.6 }}>
-            <ul>
+        <div className="card">
+          <h3 className="m-0 mb-2">Germany compliance</h3>
+          <div className="text-[12px] text-text-secondary leading-relaxed">
+            <ul className="list-disc pl-4 space-y-1">
               <li>No cookies required</li>
               <li>No raw event storage</li>
               <li>Opt-out supported</li>

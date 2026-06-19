@@ -104,20 +104,21 @@ export default function OverviewPage() {
 
   return (
     <>
-      <div className="topbar">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-5">
         <div>
-          <div className="h1">{t('overviewTitle')}</div>
-          <div className="sub">{t('overviewSubtitle')}</div>
+          <h1 className="text-[18px] font-medium text-text-primary mb-0.5 tracking-tight">{t('overviewTitle')}</h1>
+          <p className="text-[13px] text-text-secondary">{t('overviewSubtitle')}</p>
         </div>
-        <div style={{ display: 'flex', gap: 10 }}>
-          <select className="input" value={projectId} onChange={(e) => setProjectId(e.target.value)} style={{ width: 260 }}>
+        <div className="flex gap-2 w-full md:w-auto">
+          <select className="input text-[13px] py-1.5 px-2 flex-1 md:w-48" value={projectId} onChange={(e) => setProjectId(e.target.value)}>
             {projects.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
               </option>
             ))}
+            {projects.length === 0 && <option value="">No projects available</option>}
           </select>
-          <select className="input" value={timeRange} onChange={(e) => setTimeRange(e.target.value)} style={{ width: 120 }}>
+          <select className="input text-[13px] py-1.5 px-2 w-24 shrink-0" value={timeRange} onChange={(e) => setTimeRange(e.target.value)}>
             <option value="24h">24h</option>
             <option value="7d">7d</option>
             <option value="30d">30d</option>
@@ -126,101 +127,92 @@ export default function OverviewPage() {
       </div>
 
       {error ? (
-        <div className="card" style={{ marginTop: 16, borderColor: 'rgba(255,77,109,0.35)' }}>
-          <h3>Error</h3>
-          <div style={{ color: 'var(--danger)' }}>{error}</div>
+        <div className="bg-red-500/10 border border-red-500/20 rounded-md p-2.5 mb-4 flex items-center gap-2">
+          <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+          <div className="text-[12px] text-red-400 font-medium truncate">{error}</div>
         </div>
       ) : null}
 
-      <div className="grid">
-        {/* HERO: #1 problem right now */}
-        <div className="card" style={{ gridColumn: 'span 12', padding: 18 }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between', gap: 14, flexWrap: 'wrap' }}>
-            <div>
-              <div style={{ fontSize: 12, color: 'var(--muted)', fontWeight: 700, letterSpacing: 0.4 }}>
-                🎯 {t('titleTopProblem')}
-              </div>
-              <div style={{ marginTop: 10, fontSize: 18, fontWeight: 900, lineHeight: 1.2 }}>
-                {topReco ? topReco.title : 'No critical issues detected yet'}
-              </div>
-              {topReco ? (
-                <div className="sub" style={{ marginTop: 10, lineHeight: 1.6 }}>
-                  <div><b>{t('labelWhat')}:</b> {topReco.what_text}</div>
-                  <div><b>{t('labelWhy')}:</b> {topReco.why_text}</div>
-                  <div><b>{t('labelWho')}:</b> {topReco.who_text}</div>
-                  <div><b>{t('labelCost')}:</b> €{Math.round(topReco.impact_month_eur).toLocaleString()}/Monat</div>
-                  <div><b>{t('labelFix')}:</b> {topReco.effort_minutes} min — {topReco.fix_summary}</div>
-                </div>
-              ) : null}
+      <div className="flex flex-col gap-4 mt-4">
+        {/* HERO BANNER: #1 problem right now */}
+        <div className="bg-brand/10 border border-brand/20 rounded-md p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <div className="text-[11px] text-brand font-semibold uppercase tracking-wider mb-1">
+              🎯 {t('titleTopProblem')}
             </div>
-
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', gap: 10 }}>
-              {topReco ? <StatusBadge level={topReco.priority} /> : null}
-              <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', justifyContent: 'flex-end' }}>
-                <a className="btn" href="/app/recommendations">{t('btnFixNow')}</a>
-                <button
-                  className="btn btnSecondary"
-                  onClick={() => {
-                    if (topReco) navigator.clipboard.writeText(topReco.fix_code);
-                  }}
-                >
-                  {t('btnCopyCode')}
-                </button>
-                <a className="btn btnSecondary" href="/app/recommendations">{t('btnTechnicalDetails')}</a>
+            <div className="text-sm font-bold text-text-primary">
+              {topReco ? topReco.title : 'No critical issues detected yet'}
+            </div>
+            {topReco ? (
+              <div className="text-[13px] text-text-secondary mt-1">
+                {topReco.what_text} • Fix takes ~{topReco.effort_minutes} mins
               </div>
+            ) : null}
+          </div>
+
+          <div className="flex items-center gap-3 shrink-0">
+            {topReco ? <StatusBadge level={topReco.priority} /> : null}
+            <a className="btn" href="/app/recommendations">{t('btnFixNow')}</a>
+          </div>
+        </div>
+
+        {/* KPI cards (3 columns) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="card">
+            <h3 className="text-[13px] font-semibold text-text-secondary mb-1 m-0">🎯 UX Health Score</h3>
+            <div className="text-2xl font-bold text-text-primary">{data?.friction_score ?? '—'}/100</div>
+            <div className="text-[11px] text-text-tertiary mt-1">AI target: 85 (fix top 3 issues)</div>
+          </div>
+
+          <div className="card">
+            <h3 className="text-[13px] font-semibold text-text-secondary mb-1 m-0">💰 {t('titleFrictionCost')}</h3>
+            <div className="text-2xl font-bold text-text-primary">€{topReco ? Math.round(topReco.cost_week_eur).toLocaleString() : '—'}/week</div>
+            <div className="text-[11px] text-text-tertiary mt-1">Lost to friction (demo estimate)</div>
+          </div>
+
+          <div className="card">
+            <h3 className="text-[13px] font-semibold text-text-secondary mb-1 m-0">🔒 {t('titlePrivacyStatus')}</h3>
+            <div className="text-2xl font-bold text-success">100% Compliant</div>
+            <div className="text-[11px] text-text-tertiary mt-1">✅ No cookies • ✅ No PII • 🇩🇪 Data in Germany</div>
+          </div>
+        </div>
+
+        {/* Split View: Recommendations & Timeline */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          {/* AI Recommendations */}
+          <div className="card flex flex-col min-w-0">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-[13px] font-semibold text-text-secondary m-0">🤖 {t('titleAiRecommendations')}</h3>
+              <a className="text-[11px] font-medium text-brand hover:text-brand-hover transition-colors" href="/app/recommendations">{t('btnShowAll')} &rarr;</a>
+            </div>
+            
+            <div className="flex flex-col gap-2 flex-1">
+              {recos.slice(0, 3).map((r) => (
+                <div key={r.id} className="flex justify-between items-center gap-3 bg-background border border-border rounded-md p-2.5">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center gap-2 mb-1">
+                      <StatusBadge level={r.priority} />
+                      <div className="font-semibold text-text-primary text-[13px] truncate">{r.title}</div>
+                    </div>
+                    <div className="text-[11px] text-text-tertiary">
+                      €{Math.round(r.impact_month_eur).toLocaleString()}/mo • {r.effort_minutes} min
+                    </div>
+                  </div>
+                  <a className="btn btnSecondary text-[11px] px-2 py-1 whitespace-nowrap" href="/app/recommendations">{t('btnOpen')}</a>
+                </div>
+              ))}
+              {!recos.length ? <div className="text-[13px] text-text-tertiary">No recommendations available yet.</div> : null}
             </div>
           </div>
-        </div>
 
-        {/* KPI cards */}
-        <div className="card" style={{ gridColumn: 'span 4' }}>
-          <h3>🎯 UX Health Score</h3>
-          <div className="kpi">{data?.friction_score ?? '—'}/100</div>
-          <div className="kpiSmall">AI target: 85 (fix top 3 issues)</div>
-        </div>
-
-        <div className="card" style={{ gridColumn: 'span 4' }}>
-          <h3>💰 {t('titleFrictionCost')}</h3>
-          <div className="kpi">€{topReco ? Math.round(topReco.cost_week_eur).toLocaleString() : '—'}/week</div>
-          <div className="kpiSmall">Lost to friction (demo estimate)</div>
-        </div>
-
-        <div className="card" style={{ gridColumn: 'span 4' }}>
-          <h3>🔒 {t('titlePrivacyStatus')}</h3>
-          <div className="kpi" style={{ fontSize: 20 }}>100% Compliant</div>
-          <div className="kpiSmall">✅ No cookies • ✅ No PII • 🇩🇪 Data in Germany</div>
-        </div>
-
-        {/* AI Recommendations */}
-        <div className="card" style={{ gridColumn: 'span 7' }}>
-          <h3>🤖 {t('titleAiRecommendations')} (Priorisiert)</h3>
-          <div style={{ display: 'grid', gap: 10 }}>
-            {recos.slice(0, 3).map((r) => (
-              <div key={r.id} style={{ display: 'flex', justifyContent: 'space-between', gap: 12, border: '1px solid var(--border)', borderRadius: 12, padding: 12 }}>
-                <div style={{ minWidth: 0 }}>
-                  <div style={{ display: 'flex', gap: 10, alignItems: 'center', flexWrap: 'wrap' }}>
-                    <StatusBadge level={r.priority} />
-                    <div style={{ fontWeight: 900, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>{r.title}</div>
-                  </div>
-                  <div className="kpiSmall" style={{ marginTop: 8, lineHeight: 1.5 }}>
-                    €{Math.round(r.impact_month_eur).toLocaleString()}/month • {r.effort_minutes} min • {Math.round(r.confidence * 100)}% confidence
-                  </div>
-                </div>
-                <a className="btn btnSecondary" href="/app/recommendations">{t('btnOpen')}</a>
-              </div>
-            ))}
-            {!recos.length ? <div className="sub">No recommendations available yet.</div> : null}
+          {/* Timeline */}
+          <div className="card flex flex-col min-w-0">
+            <h3 className="text-[13px] font-semibold text-text-secondary mb-1 m-0">📅 {t('titleFrictionTimeline')}</h3>
+            <div className="text-[11px] text-text-tertiary mb-4">Stacked hourly incidents</div>
+            <div className="flex-1 min-h-[220px] -ml-4">
+              <TimelineStacked points={timeline} />
+            </div>
           </div>
-          <div style={{ marginTop: 12 }}>
-            <a className="btn btnSecondary" href="/app/recommendations">{t('btnShowAll')}</a>
-          </div>
-        </div>
-
-        {/* Timeline */}
-        <div className="card" style={{ gridColumn: 'span 5' }}>
-          <h3>📅 {t('titleFrictionTimeline')}</h3>
-          <TimelineStacked points={timeline} />
-          <div className="kpiSmall">Stacked hourly incidents (rage/hesitation/confusion/dead-end)</div>
         </div>
       </div>
     </>

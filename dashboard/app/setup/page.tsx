@@ -85,7 +85,7 @@ export default function SetupPage() {
 
         <div className="card" style={{ gridColumn: 'span 12' }}>
           <h3>SDK snippet (example)</h3>
-          <pre className="code">{`import ZeroBanner from '@privacyedge/analytics';
+          <pre className="code">{`import ZeroBanner from '@zerobanner/analytics';
 
 const analytics = new ZeroBanner({
   apiKey: 'YOUR_PROJECT_API_KEY',

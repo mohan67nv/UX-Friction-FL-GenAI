@@ -13,84 +13,84 @@ export default async function MarketingHome() {
               <h1 className="m_h1">{t('mHeroTitle')}</h1>
               <div className="m_sub">{t('mHeroSubtitle')}</div>
 
-              <div className="m_checks">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--m-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>✓</span>
+              <div className="m_checks" style={{ marginTop: 16 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 13 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--m-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 10, fontWeight: 900, flexShrink: 0 }}>✓</span>
                   {t('mHeroCheck1')}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--m-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>✓</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8, fontSize: 13 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--m-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 10, fontWeight: 900, flexShrink: 0 }}>✓</span>
                   {t('mHeroCheck2')}
                 </div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-                  <span style={{ width: 20, height: 20, borderRadius: '50%', background: 'var(--m-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 12, fontWeight: 900, flexShrink: 0 }}>✓</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8, fontSize: 13 }}>
+                  <span style={{ width: 16, height: 16, borderRadius: '50%', background: 'var(--m-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 10, fontWeight: 900, flexShrink: 0 }}>✓</span>
                   {t('mHeroCheck3')}
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: 10, marginTop: 18, flexWrap: 'wrap' }}>
-                <Link className="m_btn m_btnPrimary" href="/signup">
+              <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
+                <Link className="m_btn m_btnPrimary" href="/signup" style={{ padding: '10px 20px', fontSize: 13 }}>
                   {t('ctaPrimary')}
                 </Link>
-                <Link className="m_btn" href="/demo">
+                <Link className="m_btn" href="/demo" style={{ padding: '10px 20px', fontSize: 13 }}>
                   {t('mHeroCtaDemo')}
                 </Link>
               </div>
 
-              <div style={{ marginTop: 14, color: 'var(--m-muted)', fontWeight: 600 }}>
+              <div style={{ marginTop: 12, color: 'var(--m-muted)', fontWeight: 600, fontSize: 11 }}>
                 {t('mHeroTrusted')}
               </div>
             </div>
 
-            <div className="m_card" style={{ background: 'var(--m-bg2)', padding: 32 }}>
-              <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--m-primary)', marginBottom: 16, letterSpacing: '0.05em' }}>
+            <div className="m_card" style={{ background: 'var(--m-bg2)', padding: 20 }}>
+              <div style={{ fontSize: 11, fontWeight: 700, color: 'var(--m-primary)', marginBottom: 12, letterSpacing: '0.05em' }}>
                 {t('mPreviewDashboard')}
               </div>
               
               {/* Metrics Row */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 12, marginBottom: 20 }}>
-                <div style={{ background: 'var(--m-surface)', padding: 16, borderRadius: 10, border: '1px solid var(--m-border)' }}>
-                  <div style={{ fontSize: 11, color: 'var(--m-muted)', fontWeight: 600, marginBottom: 8 }}>{t('mPreviewMetric1')}</div>
-                  <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--m-text)' }}>73</div>
-                  <div style={{ fontSize: 11, color: 'var(--m-accent)', fontWeight: 600, marginTop: 4 }}>{t('mPreviewMetric1Change')}</div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8, marginBottom: 16 }}>
+                <div style={{ background: 'var(--m-surface)', padding: 10, borderRadius: 8, border: '1px solid var(--m-border)' }}>
+                  <div style={{ fontSize: 9, color: 'var(--m-muted)', fontWeight: 700, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('mPreviewMetric1')}</div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: 'var(--m-text)' }}>73</div>
+                  <div style={{ fontSize: 9, color: 'var(--m-accent)', fontWeight: 600, marginTop: 4 }}>{t('mPreviewMetric1Change')}</div>
                 </div>
-                <div style={{ background: 'var(--m-surface)', padding: 16, borderRadius: 10, border: '1px solid var(--m-border)' }}>
-                  <div style={{ fontSize: 11, color: 'var(--m-muted)', fontWeight: 600, marginBottom: 8 }}>{t('mPreviewMetric2')}</div>
-                  <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--m-danger)' }}>234</div>
-                  <div style={{ fontSize: 11, color: 'var(--m-danger)', fontWeight: 600, marginTop: 4 }}>{t('mPreviewMetric2Status')}</div>
+                <div style={{ background: 'var(--m-surface)', padding: 10, borderRadius: 8, border: '1px solid var(--m-border)' }}>
+                  <div style={{ fontSize: 9, color: 'var(--m-muted)', fontWeight: 700, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('mPreviewMetric2')}</div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: 'var(--m-danger)' }}>234</div>
+                  <div style={{ fontSize: 9, color: 'var(--m-danger)', fontWeight: 600, marginTop: 4 }}>{t('mPreviewMetric2Status')}</div>
                 </div>
-                <div style={{ background: 'var(--m-surface)', padding: 16, borderRadius: 10, border: '1px solid var(--m-border)' }}>
-                  <div style={{ fontSize: 11, color: 'var(--m-muted)', fontWeight: 600, marginBottom: 8 }}>{t('mPreviewMetric3')}</div>
-                  <div style={{ fontSize: 28, fontWeight: 900, color: 'var(--m-warning)' }}>€12.4K</div>
-                  <div style={{ fontSize: 11, color: 'var(--m-warning)', fontWeight: 600, marginTop: 4 }}>{t('mPreviewMetric3Period')}</div>
+                <div style={{ background: 'var(--m-surface)', padding: 10, borderRadius: 8, border: '1px solid var(--m-border)' }}>
+                  <div style={{ fontSize: 9, color: 'var(--m-muted)', fontWeight: 700, marginBottom: 6, whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{t('mPreviewMetric3')}</div>
+                  <div style={{ fontSize: 20, fontWeight: 900, color: 'var(--m-warning)' }}>€12.4K</div>
+                  <div style={{ fontSize: 9, color: 'var(--m-warning)', fontWeight: 600, marginTop: 4 }}>{t('mPreviewMetric3Period')}</div>
                 </div>
               </div>
 
               {/* Mini Chart */}
-              <div style={{ background: 'var(--m-surface)', padding: 16, borderRadius: 10, border: '1px solid var(--m-border)', marginBottom: 20 }}>
-                <div style={{ fontSize: 11, color: 'var(--m-muted)', fontWeight: 600, marginBottom: 12 }}>{t('mPreviewChartTitle')}</div>
-                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 4, height: 60 }}>
+              <div style={{ background: 'var(--m-surface)', padding: 10, borderRadius: 8, border: '1px solid var(--m-border)', marginBottom: 16 }}>
+                <div style={{ fontSize: 9, color: 'var(--m-muted)', fontWeight: 600, marginBottom: 10 }}>{t('mPreviewChartTitle')}</div>
+                <div style={{ display: 'flex', alignItems: 'flex-end', gap: 3, height: 40 }}>
                   {[28, 32, 29, 38, 27, 34, 58, 45, 68, 52, 38, 29].map((val, i) => (
-                    <div key={i} style={{ flex: 1, background: 'var(--m-primary)', borderRadius: '4px 4px 0 0', height: `${val}%`, opacity: 0.7 + (val / 200) }} />
+                    <div key={i} style={{ flex: 1, background: 'var(--m-primary)', borderRadius: '2px 2px 0 0', height: `${val}%`, opacity: 0.7 + (val / 200) }} />
                   ))}
                 </div>
               </div>
 
               {/* AI Recommendation */}
-              <div style={{ border: '1px solid var(--m-border)', borderRadius: 12, padding: 16, background: 'var(--m-surface)' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                  <span style={{ width: 24, height: 24, borderRadius: 6, background: 'var(--m-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 14, flexShrink: 0, fontWeight: 900, color: 'white' }}>!</span>
-                  <span style={{ fontWeight: 800, fontSize: 14, color: 'var(--m-text)' }}>{t('mPreviewAiTitle')}</span>
+              <div style={{ border: '1px solid var(--m-border)', borderRadius: 8, padding: 12, background: 'var(--m-surface)' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 8 }}>
+                  <span style={{ width: 18, height: 18, borderRadius: 4, background: 'var(--m-danger)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 11, flexShrink: 0, fontWeight: 900, color: 'white' }}>!</span>
+                  <span style={{ fontWeight: 800, fontSize: 12, color: 'var(--m-text)' }}>{t('mPreviewAiTitle')}</span>
                 </div>
-                <div style={{ fontSize: 14, color: 'var(--m-text-secondary)', marginBottom: 12, lineHeight: 1.5 }}>
+                <div style={{ fontSize: 11, color: 'var(--m-text-secondary)', marginBottom: 10, lineHeight: 1.4 }}>
                   {t('mPreviewAiProblem')}
                 </div>
-                <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 12 }}>
-                  <span style={{ padding: '4px 10px', borderRadius: 6, background: 'var(--m-danger)', color: 'white', fontSize: 11, fontWeight: 700 }}>{t('mPreviewAiBadge1')}</span>
-                  <span style={{ padding: '4px 10px', borderRadius: 6, background: 'var(--m-accent)', color: 'white', fontSize: 11, fontWeight: 700 }}>{t('mPreviewAiBadge2')}</span>
-                  <span style={{ padding: '4px 10px', borderRadius: 6, background: 'var(--m-primary)', color: 'white', fontSize: 11, fontWeight: 700 }}>{t('mPreviewAiBadge3')}</span>
+                <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', marginBottom: 10 }}>
+                  <span style={{ padding: '2px 8px', borderRadius: 4, background: 'var(--m-danger)', color: 'white', fontSize: 9, fontWeight: 700 }}>{t('mPreviewAiBadge1')}</span>
+                  <span style={{ padding: '2px 8px', borderRadius: 4, background: 'var(--m-accent)', color: 'white', fontSize: 9, fontWeight: 700 }}>{t('mPreviewAiBadge2')}</span>
+                  <span style={{ padding: '2px 8px', borderRadius: 4, background: 'var(--m-primary)', color: 'white', fontSize: 9, fontWeight: 700 }}>{t('mPreviewAiBadge3')}</span>
                 </div>
-                <div style={{ fontSize: 12, color: 'var(--m-muted)', fontStyle: 'italic' }}>
+                <div style={{ fontSize: 10, color: 'var(--m-muted)', fontStyle: 'italic' }}>
                   {t('mPreviewAiFix')}
                 </div>
               </div>
@@ -201,10 +201,10 @@ export default async function MarketingHome() {
                 <tr>
                   <td style={{ padding: '16px 20px', color: 'var(--m-text-secondary)', borderBottom: '1px solid var(--m-border)' }}>{t('mCompareRowBanner')}</td>
                   <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)' }}>
-                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-danger)', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 900 }}>✓</span>
+                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-muted)', fontSize: 16, fontWeight: 900 }}>×</span>
                   </td>
                   <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)' }}>
-                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-muted)', fontSize: 16, fontWeight: 900 }}>×</span>
+                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-text)', fontSize: 14, fontWeight: 900 }}>✓</span>
                   </td>
                   <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)', background: 'rgba(99, 102, 241, 0.02)' }}>
                     <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-accent)', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 900 }}>✓</span>
@@ -225,7 +225,7 @@ export default async function MarketingHome() {
                 <tr>
                   <td style={{ padding: '16px 20px', color: 'var(--m-text-secondary)', borderBottom: '1px solid var(--m-border)' }}>{t('mCompareRowReplay')}</td>
                   <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)' }}>
-                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-danger)', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 900 }}>✓</span>
+                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-muted)', fontSize: 16, fontWeight: 900 }}>×</span>
                   </td>
                   <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)' }}>
                     <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-muted)', fontSize: 16, fontWeight: 900 }}>×</span>
@@ -247,7 +247,19 @@ export default async function MarketingHome() {
                   </td>
                 </tr>
                 <tr>
-                  <td style={{ padding: '16px 20px', color: 'var(--m-text-secondary)' }}>{t('mCompareRowLocation')}</td>
+                  <td style={{ padding: '16px 20px', color: 'var(--m-text-secondary)', borderBottom: '1px solid var(--m-border)' }}>{t('mCompareRowPrivacy')}</td>
+                  <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)' }}>
+                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-muted)', fontSize: 16, fontWeight: 900 }}>×</span>
+                  </td>
+                  <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)' }}>
+                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-surface-hover)', alignItems: 'center', justifyContent: 'center', color: 'var(--m-muted)', fontSize: 16, fontWeight: 900 }}>×</span>
+                  </td>
+                  <td style={{ padding: '16px 20px', textAlign: 'center', borderBottom: '1px solid var(--m-border)', background: 'rgba(99, 102, 241, 0.02)' }}>
+                    <span style={{ display: 'inline-flex', width: 24, height: 24, borderRadius: 6, background: 'var(--m-accent)', alignItems: 'center', justifyContent: 'center', color: 'white', fontSize: 14, fontWeight: 900 }}>✓</span>
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ padding: '16px 20px', color: 'var(--m-text-secondary)' }}>{t('mCompareRowData')}</td>
                   <td style={{ padding: '16px 20px', textAlign: 'center' }}>
                     <span style={{ padding: '6px 12px', borderRadius: 8, background: 'var(--m-surface-hover)', color: 'var(--m-text-secondary)', fontSize: 13, fontWeight: 700 }}>US</span>
                   </td>

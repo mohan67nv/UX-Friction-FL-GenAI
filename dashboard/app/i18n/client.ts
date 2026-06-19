@@ -1,5 +1,6 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import { Locale, translations } from './translations';
 
 function getCookie(name: string): string | null {
@@ -20,6 +21,16 @@ export function getClientLocale(): Locale {
 }
 
 export function useT() {
-  const locale = getClientLocale();
-  return (key: string) => translations[locale][key] ?? key;
+  const [locale, setLocale] = useState<Locale>('de');
+
+  useEffect(() => {
+    setLocale(getClientLocale());
+  }, []);
+
+  return (key: string) => translations[locale]?.[key] ?? key;
+}
+
+export function useTranslations() {
+  const t = useT();
+  return { t };
 }
