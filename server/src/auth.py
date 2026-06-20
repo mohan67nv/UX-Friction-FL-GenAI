@@ -56,6 +56,10 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     Get current user from JWT token
     Supports both legacy JWT and Supabase JWT tokens
     """
+    from .supabase_client import get_or_create_user_from_supabase
+    from .database import AsyncSessionLocal
+    import os
+    
     if not credentials:
         raise HTTPException(status_code=401, detail="Missing bearer token")
 
@@ -65,10 +69,30 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     try:
         supabase_user = verify_supabase_jwt(token)
         if supabase_user:
+            # Sync user to our database
+            async with AsyncSessionLocal() as db:
+                user = await get_or_create_user_from_supabase(
+                    supabase_id=supabase_user["supabase_id"],
+                    email=supabase_user["email"],
+                    name=supabase_user.get("name")
+                )
+                
+                # Auto-bootstrap org for OAuth users if needed
+                auto_bootstrap = os.getenv("AUTO_BOOTSTRAP_ON_LOGIN", os.getenv("AUTO_BOOTSTRAP_ON_REGISTER", "1")).strip().lower() in ("1", "true", "yes")
+                if auto_bootstrap:
+                    from . import crud
+                    orgs = await crud.list_orgs_for_user(db, user.id)
+                    if not orgs:
+                        org = await crud.create_org_with_owner(db, user.id, (user.name or "Demo") + " Org")
+                        try:
+                            await crud.create_project(db, org.id, name="Website", domain=None, privacy_mode="high")
+                        except Exception:
+                            pass
+
             # Return user data in expected format
             return {
-                "sub": supabase_user["supabase_id"],
-                "email": supabase_user["email"],
+                "sub": user.id,
+                "email": user.email,
                 "supabase_id": supabase_user["supabase_id"],
                 "email_verified": supabase_user.get("email_verified", False),
             }

@@ -61,7 +61,8 @@ export default function OverviewPage() {
 
   useEffect(() => {
     if (!projectId) return;
-    (async () => {
+    
+    const fetchData = async () => {
       setError(null);
 
       const [overviewRes, topRes, listRes] = await Promise.all([
@@ -84,7 +85,15 @@ export default function OverviewPage() {
         const txt = await overviewRes.text();
         setError(`Failed to load analytics (${overviewRes.status}): ${txt}`);
       }
-    })();
+    };
+    
+    // Initial fetch
+    fetchData();
+    
+    // Live updates interval (every 10 seconds)
+    const intervalId = setInterval(fetchData, 10000);
+    
+    return () => clearInterval(intervalId);
   }, [projectId, timeRange]);
 
   const timeline = useMemo<TimelinePoint[]>(() => {

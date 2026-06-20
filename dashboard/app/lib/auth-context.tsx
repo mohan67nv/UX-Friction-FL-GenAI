@@ -30,10 +30,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
 
   useEffect(() => {
+    // Helper to sync cookie
+    const syncCookie = (session: Session | null) => {
+      if (session) {
+        document.cookie = `pe_token=${session.access_token}; path=/; max-age=86400; SameSite=Lax`;
+      } else {
+        document.cookie = `pe_token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+      }
+    };
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      syncCookie(session);
       setLoading(false);
     });
 
@@ -43,6 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         console.log('Auth state change:', event);
         setSession(session);
         setUser(session?.user ?? null);
+        syncCookie(session);
         setLoading(false);
 
         // Handle different auth events
